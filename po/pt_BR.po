@@ -1,0 +1,1918 @@
+# Brazilian Portuguese translation of gnome-system-monitor.
+# Copyright (C) 2023 gnome-system-monitore's COPYRIGHT HOLDERS
+# This file is distributed under the same license as the gnome-system-monitor package.
+# Francisco Petrúcio Cavalcante Junior <fpcj@impa.br>, 2002.
+# Evandro Fernandes Giovanini <evandrofg@ig.com.br>, 2002, 2006.
+# Afonso Celso Medina <medina@maua.br>, 2004.
+# Raphael Higino <In Memoriam>, 2005.
+# Vinicius Pinheiro <vinnie.gp@gmail.com>, 2006.
+# Og Maciel <ogmaciel@gnome.org>, 2007, 2009, 2011.
+# Washington Lins <washington-lins@uol.com.br>, 2007.
+# Vladimir Melo <vladimirmelo@foresightlinux.org>, 2007.
+# Hugo Doria <hugodoria@gmail.com>, 2007-2008.
+# Thiago Lima Demétrio <thiago@omegasul.com.br>, 2008.
+# Djavan Fagundes <dnoway@gmail.com>, 2008.
+# André Gondim <In Memoriam>, 2009.
+# Fábio Nogueira <fnogueira@gnome.org>, 2012, 2014.
+# Djavan Fagundes <djavan@comum.org>, 2012.
+# Jonh Wendell <jwendell@gnome.org>, 2012.
+# Enrico Nicoletto <liverig@gmail.com>, 2012, 2013, 2014, 2015, 2018.
+# Gustavo Marques <gutodisse@gmail.com>, 2016.
+# Bruno Lopes da Silva <brunolopesdsilv@gmail.com>, 2018, 2020.
+# Ricardo Silva Veloso <ricvelozo@gmail.com>, 2021.
+# Rafael Fontenelle <rafaelff@gnome.org>, 2013-2023.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-system-monitor\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-system-monitor/"
+"issues\n"
+"POT-Creation-Date: 2023-09-25 09:52+0000\n"
+"PO-Revision-Date: 2023-09-25 09:50-0300\n"
+"Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
+"Language-Team: Brazilian Portuguese <https://br.gnome.org/traducao>\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 45.alpha0\n"
+"X-Project-Style: gnome\n"
+
+#: gnome-system-monitor.desktop.in:3 gnome-system-monitor.appdata.xml.in:6
+#: data/interface.ui:6 src/application.cpp:394 src/interface.cpp:416
+msgid "System Monitor"
+msgstr "Monitor do sistema"
+
+#: gnome-system-monitor.desktop.in:4 gnome-system-monitor-kde.desktop.in:4
+#: src/interface.cpp:417
+msgid "View current processes and monitor system state"
+msgstr "Veja os processos atuais e monitore o estado do sistema"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: gnome-system-monitor.desktop.in:16
+msgid ""
+"Monitor;System;Process;CPU;Memory;Network;History;Usage;Performance;Task;"
+"Manager;Activity;"
+msgstr ""
+"Monitor;Sistema;Processo;CPU;Memória;Rede;Histórico;Uso;Desempenho;"
+"Performance;Tarefa;Gerenciador;Atividade;"
+
+#: gnome-system-monitor-kde.desktop.in:3 src/application.cpp:454
+msgid "GNOME System Monitor"
+msgstr "Monitor do sistema GNOME"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: gnome-system-monitor-kde.desktop.in:16
+msgid "Monitor;System;Process;CPU;Memory;Network;History;Usage;"
+msgstr "Monitor;Sistema;Processo;CPU;Memória;Rede;Histórico;Uso;"
+
+#: gnome-system-monitor.appdata.xml.in:7
+msgid "View and manage system resources"
+msgstr "Veja e gerencie recursos do sistema"
+
+#: gnome-system-monitor.appdata.xml.in:9
+msgid ""
+"System Monitor is a process viewer and system monitor with an attractive, "
+"easy-to-use interface."
+msgstr ""
+"O Monitor do sistema é um visualizador de processos e monitor de sistema com "
+"interface atraente e fácil de usar."
+
+#: gnome-system-monitor.appdata.xml.in:13
+msgid ""
+"System Monitor can help you find out what applications are using the "
+"processor or the memory of your computer, can manage the running "
+"applications, force stop processes not responding, and change the state or "
+"priority of existing processes."
+msgstr ""
+"O Monitor do sistema pode ajudá-lo a desvendar quais aplicativos estão "
+"usando o processador ou a memória do seu computador, pode gerenciar os "
+"aplicativos em execução, forçar processos que não estão respondendo a "
+"pararem e alterar o estado ou prioridade de processos existentes."
+
+#: gnome-system-monitor.appdata.xml.in:19
+msgid ""
+"The resource graphs feature shows you a quick overview of what is going on "
+"with your computer displaying recent network, memory and processor usage."
+msgstr ""
+"A funcionalidade de gráficos de recursos mostra a você uma rápida visão "
+"geral do que está acontecendo com o seu computador, ao exibir o uso de rede, "
+"memória e de processador."
+
+#: gnome-system-monitor.appdata.xml.in:27
+msgid "Process list view"
+msgstr "Visão da lista de processos"
+
+#: gnome-system-monitor.appdata.xml.in:31
+msgid "Resources overview"
+msgstr "Visão geral dos recursos"
+
+#: gnome-system-monitor.appdata.xml.in:35
+msgid "File Systems view"
+msgstr "Visão do sistemas de arquivos"
+
+#: gnome-system-monitor.appdata.xml.in:44
+msgid "The GNOME Project"
+msgstr "O Projeto GNOME"
+
+#: org.gnome.gnome-system-monitor.policy.in.in:11
+msgid "Kill process"
+msgstr "Matar processo"
+
+#: org.gnome.gnome-system-monitor.policy.in.in:12
+msgid "Privileges are required to control other users’ processes"
+msgstr ""
+"São necessários privilégios para controlar os processos de outros usuários"
+
+#: org.gnome.gnome-system-monitor.policy.in.in:22
+msgid "Renice process"
+msgstr "Mudar prioridade do processo"
+
+#: org.gnome.gnome-system-monitor.policy.in.in:23
+msgid "Privileges are required to change the priority of processes"
+msgstr "São necessários privilégios para mudar a prioridade dos processos"
+
+#: data/help-overlay.ui:12
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Geral"
+
+#: data/help-overlay.ui:17
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Mostra a ajuda"
+
+#: data/help-overlay.ui:23
+msgctxt "shortcut window"
+msgid "Open menu"
+msgstr "Abre o menu"
+
+#: data/help-overlay.ui:29
+msgctxt "shortcut window"
+msgid "Show preferences"
+msgstr "Mostra as preferências"
+
+#: data/help-overlay.ui:37
+msgctxt "shortcut window"
+msgid "Keyboard shortcuts"
+msgstr "Atalhos do teclado"
+
+#: data/help-overlay.ui:44
+msgctxt "shortcut window"
+msgid "Quit"
+msgstr "Sai"
+
+#: data/help-overlay.ui:50
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Pesquisa"
+
+#: data/help-overlay.ui:56
+msgctxt "shortcut window"
+msgid "Show Processes"
+msgstr "Mostra os processos"
+
+#: data/help-overlay.ui:62
+msgctxt "shortcut window"
+msgid "Show Resources"
+msgstr "Mostra os recursos"
+
+#: data/help-overlay.ui:68
+msgctxt "shortcut window"
+msgid "Show File Systems"
+msgstr "Mostra os sistemas de arquivos"
+
+#: data/help-overlay.ui:75
+msgctxt "shortcut window"
+msgid "Refresh"
+msgstr "Atualiza"
+
+#: data/help-overlay.ui:82
+msgctxt "shortcut window"
+msgid "Processes"
+msgstr "Processos"
+
+#: data/help-overlay.ui:87
+msgctxt "shortcut window"
+msgid "Show dependencies"
+msgstr "Mostra as dependências"
+
+#: data/help-overlay.ui:94
+msgctxt "shortcut window"
+msgid "Show process properties"
+msgstr "Mostra as propriedades do processo"
+
+#: data/help-overlay.ui:101
+msgctxt "shortcut window"
+msgid "Memory maps"
+msgstr "Mapas de memória"
+
+#: data/help-overlay.ui:108
+msgctxt "shortcut window"
+msgid "Open files"
+msgstr "Abre arquivos"
+
+#: data/help-overlay.ui:114
+msgctxt "shortcut window"
+msgid "Send stop signal"
+msgstr "Envia o sinal para interromper"
+
+#: data/help-overlay.ui:120
+msgctxt "shortcut window"
+msgid "Send continue signal"
+msgstr "Envia o sinal para continuar"
+
+#: data/help-overlay.ui:126
+msgctxt "shortcut window"
+msgid "Send Terminate signal"
+msgstr "Envia o sinal para encerrar"
+
+#: data/help-overlay.ui:132
+msgctxt "shortcut window"
+msgid "Send Kill signal"
+msgstr "Envia o sinal para matar"
+
+#: data/interface.ui:54 data/preferences.ui:12
+msgid "Processes"
+msgstr "Processos"
+
+#: data/interface.ui:86 src/procdialogs.cpp:150 src/proctable.cpp:136
+msgid "_End Process"
+msgid_plural "_End Processes"
+msgstr[0] "_Terminar processo"
+msgstr[1] "_Terminar processos"
+
+#: data/interface.ui:96
+msgid "Show process properties"
+msgstr "Mostrar propriedades do processo"
+
+#: data/interface.ui:117 data/preferences.ui:109
+msgid "Resources"
+msgstr "Recursos"
+
+#: data/interface.ui:159 data/preferences.ui:161 src/interface.cpp:264
+#: src/procproperties.cpp:77
+msgid "CPU"
+msgstr "CPU"
+
+#: data/interface.ui:190 src/interface.cpp:302 src/procproperties.cpp:71
+#: src/proctable.cpp:359
+msgid "Memory"
+msgstr "Memória"
+
+#: data/interface.ui:201 src/interface.cpp:314
+msgid "Swap"
+msgstr "Swap"
+
+#: data/interface.ui:218 data/preferences.ui:183
+msgid "Memory and Swap"
+msgstr "Memória e swap"
+
+#: data/interface.ui:249 src/interface.cpp:343
+msgid "Receiving"
+msgstr "Recebidos"
+
+#: data/interface.ui:259
+msgid "Total Received"
+msgstr "Total recebidos"
+
+#: data/interface.ui:269 src/interface.cpp:361
+msgid "Sending"
+msgstr "Enviados"
+
+#: data/interface.ui:279
+msgid "Total Sent"
+msgstr "Total enviados"
+
+#: data/interface.ui:296 data/preferences.ui:215
+msgid "Network"
+msgstr "Rede"
+
+#: data/interface.ui:315 data/preferences.ui:262
+msgid "File Systems"
+msgstr "Sistemas de arquivos"
+
+# Adotada a tradução de "Pesquisa em arquivos abertos" como título da janela de diálogo de pesquisa. --Enrico
+#: data/lsof.ui:6
+msgctxt "Window title for Search for Open Files dialog"
+msgid "Search for Open Files"
+msgstr "Pesquisa em arquivos abertos"
+
+#: data/lsof.ui:30
+msgid "Filter files by name"
+msgstr "Filtrar arquivos por nome"
+
+#: data/lsof.ui:38
+msgid "Case insensitive"
+msgstr "Insensível a maiúsculas e minúsculas"
+
+#: data/menus.ui:7 data/menus.ui:62
+msgctxt "Menu item to Open Search for Open Files dialog"
+msgid "Search for Open Files"
+msgstr "Pesquisar por arquivos abertos"
+
+#: data/menus.ui:13 data/menus.ui:68 data/preferences.ui:6
+msgid "Preferences"
+msgstr "Preferências"
+
+#: data/menus.ui:17 data/menus.ui:72
+msgid "Help"
+msgstr "Ajuda"
+
+#: data/menus.ui:21 data/menus.ui:76
+msgid "Keyboard Shortcuts"
+msgstr "Atalhos do teclado"
+
+#: data/menus.ui:25 data/menus.ui:80
+msgid "About System Monitor"
+msgstr "Sobre o Monitor do sistema"
+
+#: data/menus.ui:33
+msgid "_Refresh"
+msgstr "At_ualizar"
+
+#: data/menus.ui:39
+msgid "_Active Processes"
+msgstr "_Processos ativos"
+
+#: data/menus.ui:44
+msgid "A_ll Processes"
+msgstr "_Todos os processos"
+
+#: data/menus.ui:49
+msgid "M_y Processes"
+msgstr "_Meus processos"
+
+#: data/menus.ui:56
+msgid "Show _Dependencies"
+msgstr "Mostrar _dependências"
+
+#: data/menus.ui:88
+msgid "_Properties"
+msgstr "_Propriedades"
+
+#: data/menus.ui:94
+msgid "_Memory Maps"
+msgstr "Mapa_s de memória"
+
+#. Translators: this means 'Files that are open' (open is not a verb here)
+#: data/menus.ui:98
+msgid "Open _Files"
+msgstr "_Arquivos abertos"
+
+#: data/menus.ui:104
+msgid "_Change Priority"
+msgstr "A_lterar prioridade"
+
+#: data/menus.ui:107 src/util.cpp:173
+msgid "Very High"
+msgstr "Muito alta"
+
+#: data/menus.ui:112 src/util.cpp:175
+msgid "High"
+msgstr "Alta"
+
+#: data/menus.ui:117 src/util.cpp:177
+msgid "Normal"
+msgstr "Normal"
+
+#: data/menus.ui:122 src/util.cpp:179
+msgid "Low"
+msgstr "Baixa"
+
+#: data/menus.ui:127 src/util.cpp:181
+msgid "Very Low"
+msgstr "Muito baixa"
+
+#: data/menus.ui:134
+msgid "Custom"
+msgstr "Personalizado"
+
+#: data/menus.ui:141
+msgid "Set _Affinity"
+msgstr "Definir _afinidade"
+
+#: data/menus.ui:147
+msgid "_Stop"
+msgstr "_Parar"
+
+#: data/menus.ui:152
+msgid "_Continue"
+msgstr "_Continuar"
+
+#: data/menus.ui:157
+msgid "_Terminate"
+msgstr "_Encerrar"
+
+#: data/menus.ui:162
+msgid "_Kill"
+msgstr "_Matar"
+
+#: data/openfiles.ui:6
+msgid "Open Files"
+msgstr "Arquivos abertos"
+
+#: data/preferences.ui:16 data/preferences.ui:113 data/preferences.ui:266
+msgid "Behavior"
+msgstr "Comportamento"
+
+#: data/preferences.ui:20 data/preferences.ui:117 data/preferences.ui:270
+msgid "_Update Interval in Seconds"
+msgstr "_Intervalo de atualização em segundos"
+
+#: data/preferences.ui:34
+msgid "Enable _Smooth Refresh"
+msgstr "_Habilitar atualização suave"
+
+#: data/preferences.ui:47
+msgid "Alert Before Ending or _Killing Processes"
+msgstr "_Alertar antes de terminar ou matar processos"
+
+#: data/preferences.ui:60
+msgid "_Divide CPU Usage by CPU Count"
+msgstr "_Dividir uso da CPU pela contagem de CPU"
+
+#: data/preferences.ui:73
+msgid "Show Memory in IEC"
+msgstr "Mostrar memória em IEC"
+
+#: data/preferences.ui:87 data/preferences.ui:298
+msgid "Information Fields"
+msgstr "Campos de informação"
+
+#: data/preferences.ui:88
+msgid "Process information shown in list:"
+msgstr "Informações dos processos mostrados em lista:"
+
+#: data/preferences.ui:131
+msgid "_Chart Data Points"
+msgstr "Pontos de dados do gráfi_co"
+
+#: data/preferences.ui:146
+msgid "Draw Charts as S_mooth Graphs"
+msgstr "Desenhar gráfico como gráfico _suave"
+
+#: data/preferences.ui:166
+msgid "_Draw CPU Chart as Stacked Area Chart"
+msgstr "_Desenhar gráfico da CPU como gráfico de área empilhada"
+
+#: data/preferences.ui:187
+msgid "Show Memory and Swap in IEC"
+msgstr "Mostrar Memória e swap em IEC"
+
+#: data/preferences.ui:200
+msgid "Show Memory in Logarithmic Scale"
+msgstr "Mostrar memória na escala logarítmica"
+
+#: data/preferences.ui:219
+msgid "_Show Network Speed in Bits"
+msgstr "_Mostrar velocidade da rede em bits"
+
+#: data/preferences.ui:232
+msgid "Set Network Totals _Unit Separately"
+msgstr "Definir _unidade do total de rede separadamente"
+
+#: data/preferences.ui:245
+msgid "Show Network _Totals in Bits"
+msgstr "Mostrar tráfego _total da rede em bits"
+
+#: data/preferences.ui:284
+msgid "Show _All File Systems"
+msgstr "Mostra todos os sistemas de arquivos"
+
+#: data/preferences.ui:299
+msgid "File system information shown in list"
+msgstr "Informações do sistema de arquivos mostradas em lista"
+
+#: data/renice.ui:15 src/procdialogs.cpp:166 src/setaffinity.cpp:305
+msgid "_Cancel"
+msgstr "_Cancelar"
+
+#: data/renice.ui:16
+msgid "Change _Priority"
+msgstr "Alterar _prioridade"
+
+#: data/renice.ui:39
+msgid "_Nice value:"
+msgstr "Valor _nice:"
+
+#: data/renice.ui:69
+msgid ""
+"<small><i><b>Note:</b> The priority of a process is given by its nice value. "
+"A lower nice value corresponds to a higher priority.</i></small>"
+msgstr ""
+"<small><i><b>Note:</b> A prioridade de um processo é dada pelo seu valor "
+"nice. Um menor valor nice corresponde a uma maior prioridade.</i></small>"
+
+#: src/application.cpp:437
+msgid "A simple process and system monitor."
+msgstr "Um simples monitor de processos do sistema."
+
+#: src/argv.cpp:22
+msgid "Show the Processes tab"
+msgstr "Mostra a aba de processos"
+
+#: src/argv.cpp:28
+msgid "Show the Resources tab"
+msgstr "Mostra a aba de recursos"
+
+#: src/argv.cpp:34
+msgid "Show the File Systems tab"
+msgstr "Mostra a aba de arquivos de sistema"
+
+#: src/argv.cpp:39
+msgid "Show the application’s version"
+msgstr "Mostra a versão do aplicativo"
+
+#: src/disks.cpp:393 src/memmaps.cpp:355
+msgid "Device"
+msgstr "Dispositivo"
+
+#: src/disks.cpp:394
+msgid "Directory"
+msgstr "Diretório"
+
+#: src/disks.cpp:395 src/legacy/gsm_color_button.c:588 src/openfiles.cpp:269
+msgid "Type"
+msgstr "Tipo"
+
+#: src/disks.cpp:396
+msgid "Total"
+msgstr "Total"
+
+#: src/disks.cpp:397
+msgid "Free"
+msgstr "Livre"
+
+#: src/disks.cpp:398
+msgid "Available"
+msgstr "Disponível"
+
+#: src/disks.cpp:399
+msgid "Used"
+msgstr "Em uso"
+
+#. Translators: color picker title, %s is CPU, Memory, Swap, Receiving, Sending
+#: src/interface.cpp:229
+#, c-format
+msgid "Pick a Color for “%s”"
+msgstr "Selecione uma cor para “%s”"
+
+#: src/interface.cpp:266
+#, c-format
+msgid "CPU%d"
+msgstr "CPU%d"
+
+#: src/interface.cpp:428
+msgid "translator-credits"
+msgstr ""
+"Francisco Petrúcio Cavalcante Junior <fpcj@impa.br>\n"
+"Evandro Fernandes Giovanini <evandrofg@ig.com.br>\n"
+"Afonso Celso Medina <medina@maua.br>\n"
+"Raphael Higino (In memoriam) <In memoriam>\n"
+"Vinicius Pinheiro <vinnie.gp@gmail.com>\n"
+"Og Maciel <ogmaciel@ubuntu.com>\n"
+"Vladimir Melo <vladimirmelo@foresightlinux.org>\n"
+"Hugo Doria <hugodoria@gmail.com>\n"
+"Djavan Fagundes <djavanf@gnome.org>\n"
+"André Gondim (In memoriam) <In memoriam>\n"
+"Fábio Nogueira <fnogueira@gnome.org>\n"
+"Rafael Fontenelle <rafaelff@gnome.org>\n"
+"Enrico Nicoletto <liverig@gmail.com>\n"
+"Bruno Lopes <brunolopesdsilv@gmail.com>"
+
+#. xgettext: ? stands for unknown
+#: src/legacy/e_date.c:175
+msgid "?"
+msgstr "?"
+
+#: src/legacy/e_date.c:183
+msgid "Today %l∶%M %p"
+msgstr "Hoje %H∶%M"
+
+#: src/legacy/e_date.c:194
+msgid "Yesterday %l∶%M %p"
+msgstr "Ontem %H∶%M"
+
+#: src/legacy/e_date.c:209
+msgid "%a %l∶%M %p"
+msgstr "%a %H∶%M"
+
+#: src/legacy/e_date.c:218
+msgid "%b %d %l∶%M %p"
+msgstr "%d de %b %H∶%M"
+
+#: src/legacy/e_date.c:220
+msgid "%b %d %Y"
+msgstr "%d de %b de %Y"
+
+#: src/legacy/gsm_color_button.c:564
+msgid "Fraction"
+msgstr "Fração"
+
+#. TRANSLATORS: description of the pie color picker's (mem, swap) filled percentage property
+#: src/legacy/gsm_color_button.c:566
+msgid "Percentage full for pie color pickers"
+msgstr "Porcentagem completa para os selecionadores de cor"
+
+#: src/legacy/gsm_color_button.c:573
+msgid "Title"
+msgstr "Título"
+
+#: src/legacy/gsm_color_button.c:574
+msgid "The title of the color selection dialog"
+msgstr "O título da janela de seleção de cor"
+
+#: src/legacy/gsm_color_button.c:575 src/legacy/gsm_color_button.c:613
+msgid "Pick a Color"
+msgstr "Selecione uma cor"
+
+#: src/legacy/gsm_color_button.c:581
+msgid "Current Color"
+msgstr "Cor atual"
+
+#: src/legacy/gsm_color_button.c:582
+msgid "The selected color"
+msgstr "A cor selecionada"
+
+#: src/legacy/gsm_color_button.c:589
+msgid "Type of color picker"
+msgstr "Tipo do selecionador de cor"
+
+#: src/legacy/gsm_color_button.c:636
+msgid "Click to set graph colors"
+msgstr "Clique para definir as cores do gráfico"
+
+#. Translators: loadgraphs y axis percentage labels: 0 %, 50%, 100%
+#: src/load-graph.cpp:100 src/load-graph.cpp:110
+#, c-format
+msgid "%.0f %%"
+msgstr "%.0f %%"
+
+#: src/load-graph.cpp:159
+#, c-format
+msgid "%u hr"
+msgid_plural "%u hrs"
+msgstr[0] "%u hr"
+msgstr[1] "%u hrs"
+
+#: src/load-graph.cpp:160
+#, c-format
+msgid "%u min"
+msgid_plural "%u mins"
+msgstr[0] "%u min"
+msgstr[1] "%u mins"
+
+#: src/load-graph.cpp:162
+#, c-format
+msgid "%u sec"
+msgid_plural "%u secs"
+msgstr[0] "%u s"
+msgstr[1] "%u s"
+
+#. Update label
+#. Translators: CPU usage percentage label: 95.7%
+#: src/load-graph.cpp:569
+#, c-format
+msgid "%.1f%%"
+msgstr "%.1f%%"
+
+#: src/load-graph.cpp:596
+msgid "not available"
+msgstr "não disponível"
+
+#. xgettext: "540MiB (53 %) of 1.0 GiB" or "540MB (53 %) of 1.0 GB"
+#: src/load-graph.cpp:601
+#, c-format
+msgid "%s (%.1f%%) of %s"
+msgstr "%s (%.1f %%) de %s"
+
+#. xgettext: Used cache string, e.g.: "Cache 2.4GiB" or "Cache 2.4GB"
+#: src/load-graph.cpp:606
+#, c-format
+msgid "Cache %s"
+msgstr "Cache %s"
+
+#: src/lsof.cpp:116
+#, c-format
+msgid "%d open file"
+msgid_plural "%d open files"
+msgstr[0] "%d arquivo aberto"
+msgstr[1] "%d arquivos abertos"
+
+#: src/lsof.cpp:118
+#, c-format
+msgid "%d matching open file"
+msgid_plural "%d matching open files"
+msgstr[0] "%d arquivo aberto correspondente"
+msgstr[1] "%d arquivos abertos correspondentes"
+
+#: src/lsof.cpp:227
+msgid "Process"
+msgstr "Processo"
+
+#: src/lsof.cpp:238
+msgid "PID"
+msgstr "PID"
+
+#: src/lsof.cpp:247 src/memmaps.cpp:333
+msgid "Filename"
+msgstr "Nome do arquivo"
+
+#. xgettext: virtual memory start
+#: src/memmaps.cpp:335
+msgid "VM Start"
+msgstr "Início da VM"
+
+#. xgettext: virtual memory end
+#: src/memmaps.cpp:337
+msgid "VM End"
+msgstr "Fim da VM"
+
+#. xgettext: virtual memory syze
+#: src/memmaps.cpp:339
+msgid "VM Size"
+msgstr "Tamanho da VM"
+
+#: src/memmaps.cpp:340
+msgid "Flags"
+msgstr "Sinalizadores"
+
+#. xgettext: virtual memory offset
+#: src/memmaps.cpp:342
+msgid "VM Offset"
+msgstr "Deslocamento da VM"
+
+#. xgettext: memory that has not been modified since
+#. it has been allocated
+#: src/memmaps.cpp:345
+msgid "Private clean"
+msgstr "Limpa e reservada"
+
+#. xgettext: memory that has been modified since it
+#. has been allocated
+#: src/memmaps.cpp:348
+msgid "Private dirty"
+msgstr "Suja e reservada"
+
+#. xgettext: shared memory that has not been modified
+#. since it has been allocated
+#: src/memmaps.cpp:351
+msgid "Shared clean"
+msgstr "Limpa e compartilhada"
+
+#. xgettext: shared memory that has been modified
+#. since it has been allocated
+#: src/memmaps.cpp:354
+msgid "Shared dirty"
+msgstr "Suja e compartilhada"
+
+#: src/memmaps.cpp:356
+msgid "Inode"
+msgstr "Inode"
+
+#: src/memmaps.cpp:474
+msgid "Memory Maps"
+msgstr "Mapas de memória"
+
+#: src/memmaps.cpp:488
+#, c-format
+msgid "_Memory maps for process “%s” (PID %u):"
+msgstr "_Mapas de memória para o processo “%s” (PID %u):"
+
+#: src/openfiles.cpp:39
+msgid "file"
+msgstr "arquivo"
+
+#: src/openfiles.cpp:42
+msgid "pipe"
+msgstr "pipe"
+
+#: src/openfiles.cpp:45
+msgid "IPv6 network connection"
+msgstr "Conexão de rede IPv6"
+
+#: src/openfiles.cpp:48
+msgid "IPv4 network connection"
+msgstr "Conexão de rede IPv4"
+
+#: src/openfiles.cpp:51
+msgid "local socket"
+msgstr "socket local"
+
+#: src/openfiles.cpp:54
+msgid "unknown type"
+msgstr "tipo desconhecido"
+
+#. Translators: "FD" here means "File Descriptor". Please use
+#. a very short translation if possible, and at most
+#. 2-3 characters for it to be able to fit in the UI.
+#: src/openfiles.cpp:268
+msgid "FD"
+msgstr "FD"
+
+#: src/openfiles.cpp:270
+msgid "Object"
+msgstr "Objeto"
+
+#: src/openfiles.cpp:359
+#, c-format
+msgid "_Files opened by process “%s” (PID %u):"
+msgstr "_Arquivos abertos pelo processo “%s” (PID %u):"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:5
+msgid "Main window size in the form (width, height)"
+msgstr "O tamanho da janela principal no formulário (largura, altura)"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:11
+msgid "Main Window should open maximized"
+msgstr "A janela principal deve ser aberta maximizada"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:18
+msgid "Show process dependencies in tree form"
+msgstr "Mostra as dependências do processo na forma de árvore"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:25
+msgid "Solaris mode for CPU percentage"
+msgstr "Modo Solaris para porcentagem de CPU"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:27
+msgid ""
+"If TRUE, system-monitor operates in “Solaris mode” where a task’s CPU usage "
+"is divided by the total number of CPUs. Otherwise, it operates in “Irix "
+"mode”."
+msgstr ""
+"Se VERDADEIRO, o monitor do sistema opera no “modo Solaris” onde o uso da "
+"cpu pela tarefa é dividido pelo número total de CPUs. Caso contrário, opera "
+"no “modo Irix”."
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:34
+msgid "Show memory in IEC"
+msgstr "Mostra memória em IEC"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:41
+msgid "Enable/Disable smooth refresh"
+msgstr "Habilita/desabilita a atualização suave"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:48
+msgid "Show warning dialog when killing processes"
+msgstr "Mostra diálogo de aviso ao matar processos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:55
+msgid "Time in milliseconds between updates of the process view"
+msgstr "Tempo em milissegundos entre atualizações da visão de processos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:61
+msgid "Time in milliseconds between updates of the graphs"
+msgstr "Tempo em milissegundos entre atualizações dos gráficos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:67
+msgid "Whether information about all file systems should be displayed"
+msgstr ""
+"Se as informações sobre todos os sistemas de arquivos devem ser exibidas"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:69
+msgid ""
+"Whether to display information about all file systems (including types like "
+"“autofs” and “procfs”). Useful for getting a list of all currently mounted "
+"file systems."
+msgstr ""
+"Se as informações sobre todos os sistemas de arquivos devem ser exibidas "
+"(incluindo tipos como “autofs” e “procfs”). Isso pode ser útil para obter "
+"uma lista de todos os sistemas de arquivos montados no momento."
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:76
+msgid "Time in milliseconds between updates of the devices list"
+msgstr "Tempo em milissegundos entre atualizações da lista de dispositivos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:82
+msgid "Time amount of data points in the resource graphs"
+msgstr "Quantidade de tempo dos pontos de dados nos gráficos de recursos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:92
+msgid "Determines which processes to show."
+msgstr "Determina quais processos mostrar."
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:102
+msgid "Saves the currently viewed tab"
+msgstr "Salva a aba exibida atualmente"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:125
+msgid "CPU colors"
+msgstr "Cores da CPU"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:127
+msgid "Each entry is in the format (CPU#, Hexadecimal color value)"
+msgstr "Cada entrada está no formato (CPU#, valor da cor em hexadecimal)"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:134
+msgid "Default graph memory color"
+msgstr "Cor padrão da memória no gráfico"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:141
+msgid "Default graph swap color"
+msgstr "Cor padrão da swap no gráfico"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:148
+msgid "Default graph incoming network traffic color"
+msgstr "Cor padrão do gráfico de tráfego de entrada de rede"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:155
+msgid "Default graph outgoing network traffic color"
+msgstr "Cor padrão do gráfico de tráfego de saída de rede"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:162
+msgid "Show network traffic in bits"
+msgstr "Mostra o tráfego da rede em bits"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:169
+msgid "Set network totals unit separately"
+msgstr "Define a unidade do total de rede separadamente"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:176
+msgid "Show network totals in bits"
+msgstr "Mostra o tráfego total da rede em bits"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:183
+msgid "Show memory in logarithmic scale"
+msgstr "Mostra memória em escala logarítmica"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:185
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:194
+msgid ""
+"If TRUE, system-monitor shows the CPU chart as a stacked area chart instead "
+"of a line chart."
+msgstr ""
+"Se VERDADEIRO, o monitor do sistema mostra o gráfico da CPU como um gráfico "
+"de área empilhada ao invés de um gráfico de linhas."
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:192
+msgid "Show CPU chart as stacked area chart"
+msgstr "Mostra o gráfico de CPU como gráfico de área empilhada"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:201
+msgid ""
+"Show CPU, Memory, and Network charts as smooth graphs using Bezier curves"
+msgstr ""
+"Mostra o gráficos de CPU, Memória e Rede como gráfico suave usando curvas "
+"Bezier"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:203
+msgid ""
+"If TRUE, system-monitor shows the CPU, Memory, and Network charts as "
+"smoothed graphs, otherwise as line charts."
+msgstr ""
+"Se VERDADEIRO, o monitor do sistema mostra o gráficos de CPU, Memória e Rede "
+"como um gráfico suave; do contrário, como um gráfico de linhas."
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:210
+msgid "Show memory and swap in IEC"
+msgstr "Mostra memória e swap em IEC"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:224
+msgid "Process view sort column"
+msgstr "Coluna de ordenação da visão de processos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:231
+msgid "Process view columns order"
+msgstr "Ordem das colunas na visão de processos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:238
+msgid "Process view sort order"
+msgstr "Ordenação da visão de processos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:245
+msgid "Width of process “Name” column"
+msgstr "Largura da coluna “Nome” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:252
+msgid "Show process “Name” column on startup"
+msgstr "Mostra a coluna “Nome” ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:259
+msgid "Width of process “User” column"
+msgstr "Largura da coluna “Usuário” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:266
+msgid "Show process “User” column on startup"
+msgstr "Mostra a coluna “Usuário” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:273
+msgid "Width of process “Status” column"
+msgstr "Largura da coluna “Estado” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:280
+msgid "Show process “Status” column on startup"
+msgstr "Mostra a coluna “Estado” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:287
+msgid "Width of process “Virtual Memory” column"
+msgstr "Largura da coluna “Memória virtual” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:294
+msgid "Show process “Virtual Memory” column on startup"
+msgstr "Mostra a coluna “Memória virtual” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:301
+msgid "Width of process “Resident Memory” column"
+msgstr "Largura da coluna “Memória residente” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:308
+msgid "Show process “Resident Memory” column on startup"
+msgstr "Mostra a coluna “Memória residente” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:315
+msgid "Width of process “Writable Memory” column"
+msgstr "Largura da coluna “Memória gravável” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:322
+msgid "Show process “Writable Memory” column on startup"
+msgstr "Mostra a coluna “Memória gravável” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:329
+msgid "Width of process “Shared Memory” column"
+msgstr "Largura da coluna “Memória compartilhada” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:336
+msgid "Show process “Shared Memory” column on startup"
+msgstr "Mostra a coluna “Memória compartilhada” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:343
+msgid "Width of process “X Server Memory” column"
+msgstr "Largura da coluna “Memória do servidor X” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:350
+msgid "Show process “X Server Memory” column on startup"
+msgstr "Mostra a coluna “Memória do servidor X” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:357
+msgid "Width of process “CPU %” column"
+msgstr "Largura da coluna “% CPU” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:364
+msgid "Show process “CPU %” column on startup"
+msgstr "Mostra a coluna “% CPU” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:371
+msgid "Width of process “CPU Time” column"
+msgstr "Largura da coluna “Tempo da CPU” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:378
+msgid "Show process “CPU Time” column on startup"
+msgstr "Mostra a coluna “Tempo da CPU” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:385
+msgid "Width of process “Started” column"
+msgstr "Largura da coluna “Iniciado” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:392
+msgid "Show process “Started” column on startup"
+msgstr "Mostra a coluna “Iniciado” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:399
+msgid "Width of process “Nice” column"
+msgstr "Largura da coluna “Nice” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:406
+msgid "Show process “Nice” column on startup"
+msgstr "Mostra a coluna “Nice” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:413
+msgid "Width of process “ID” column"
+msgstr "Largura da coluna “ID” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:420
+msgid "Show process “ID” column on startup"
+msgstr "Mostra a coluna “ID” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:427
+msgid "Width of process “SELinux Security Context” column"
+msgstr "Largura da coluna “Contexto de segurança SELinux” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:433
+msgid "Show process “SELinux Security Context” column on startup"
+msgstr ""
+"Mostra a coluna “Contexto de segurança SELinux” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:440
+msgid "Width of process “Command Line” column"
+msgstr "Largura da coluna “Linha de comando” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:447
+msgid "Show process “Command Line” column on startup"
+msgstr "Mostra a coluna “Linha de comando” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:454
+msgid "Width of process “Memory” column"
+msgstr "Largura da coluna “Memória” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:461
+msgid "Show process “Memory” column on startup"
+msgstr "Mostra a coluna “Memória” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:468
+msgid "Width of process “Waiting Channel” column"
+msgstr "Largura da coluna “Aguardando canal” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:475
+msgid "Show process “Waiting Channel” column on startup"
+msgstr "Mostra a coluna “Aguardando canal” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:482
+msgid "Width of process “Control Group” column"
+msgstr "Largura da coluna “Grupo de controle” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:489
+msgid "Show process “Control Group” column on startup"
+msgstr "Mostra a coluna “Grupo de controle” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:496
+msgid "Width of process “Unit” column"
+msgstr "Largura da coluna “Unidade” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:503
+msgid "Show process “Unit” column on startup"
+msgstr "Mostra a coluna “Unidade” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:510
+msgid "Width of process “Session” column"
+msgstr "Largura da coluna “Sessão” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:517
+msgid "Show process “Session” column on startup"
+msgstr "Mostra a coluna “Sessão” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:524
+msgid "Width of process “Seat” column"
+msgstr "Largura da coluna “Estação” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:531
+msgid "Show process “Seat” column on startup"
+msgstr "Mostra a coluna “Estação” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:538
+msgid "Width of process “Owner” column"
+msgstr "Largura da coluna “Proprietário” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:545
+msgid "Show process “Owner” column on startup"
+msgstr "Mostra a coluna “Proprietário” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:552
+msgid "Width of process “Disk read total” column"
+msgstr "Largura da coluna “Total de leitura do disco” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:559
+msgid "Show process “Disk read total” column on startup"
+msgstr "Mostra a coluna “Total de leitura do disco” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:566
+msgid "Width of process “Disk write total” column"
+msgstr "Largura da coluna “Total de escrita no disco” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:573
+msgid "Show process “Disk write total” column on startup"
+msgstr "Mostra a coluna “Total de escrita no disco” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:580
+msgid "Width of process “Disk read” column"
+msgstr "Largura da coluna “Leitura do disco” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:587
+msgid "Show process “Disk read” column on startup"
+msgstr "Mostra a coluna “Leitura do disco” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:594
+msgid "Width of process “Disk write” column"
+msgstr "Largura da coluna “Escrita no disco” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:601
+msgid "Show process “Disk write” column on startup"
+msgstr "Mostra a coluna “Escrita no disco” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:608
+msgid "Width of process “Priority” column"
+msgstr "Largura da coluna “Prioridade” do processo"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:615
+msgid "Show process “Priority” column on startup"
+msgstr "Mostra a coluna “Prioridade” do processo ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:626
+msgid "Disk view sort column"
+msgstr "Coluna de ordenação da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:633
+msgid "Disk view sort order"
+msgstr "Ordem da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:640
+msgid "Disk view columns order"
+msgstr "Ordem das colunas de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:647
+msgid "Width of disk view “Device” column"
+msgstr "Largura da coluna “Dispositivo” da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:654
+msgid "Show disk view “Device” column on startup"
+msgstr "Mostra a coluna “Dispositivo” da visão de discos ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:661
+msgid "Width of disk view “Directory” column"
+msgstr "Largura da coluna “Diretório” da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:668
+msgid "Show disk view “Directory” column on startup"
+msgstr "Mostra a coluna “Diretório” da visão de discos ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:675
+msgid "Width of disk view “Type” column"
+msgstr "Largura da coluna “Tipo” da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:682
+msgid "Show disk view “Type” column on startup"
+msgstr "Mostra a coluna “Tipo” da visão de discos ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:689
+msgid "Width of disk view “Total” column"
+msgstr "Largura da coluna “Total” da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:696
+msgid "Show disk view “Total” column on startup"
+msgstr "Mostra a coluna “Total” da visão de discos ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:703
+msgid "Width of disk view “Free” column"
+msgstr "Largura da coluna “Livre” da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:710
+msgid "Show disk view “Free” column on startup"
+msgstr "Mostra a coluna “Livre” da visão de discos ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:717
+msgid "Width of disk view “Available” column"
+msgstr "Largura da coluna “Disponível” da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:724
+msgid "Show disk view “Available” column on startup"
+msgstr "Mostra a coluna “Disponível” da visão de discos ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:731
+msgid "Width of disk view “Used” column"
+msgstr "Largura da coluna “Em uso” da visão de discos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:738
+msgid "Show disk view “Used” column on startup"
+msgstr "Mostra a coluna “Em uso” da visão de discos ao inicializar"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:748
+msgid "Memory map sort column"
+msgstr "Ordenação de coluna de mapeamento de memória"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:755
+msgid "Memory map sort order"
+msgstr "Ordem de ordenação de mapeamento de memória"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:764
+msgid "Open files sort column"
+msgstr "Coluna de ordenação de arquivos abertos"
+
+#: src/org.gnome.gnome-system-monitor.gschema.xml.in:771
+msgid "Open files sort order"
+msgstr "Ordem de ordenação de arquivos abertos"
+
+#: src/prefsdialog.cpp:145
+msgid "Icon"
+msgstr "Ícone"
+
+#: src/procactions.cpp:79
+#, c-format
+msgid ""
+"Cannot change the priority of process with PID %d to %d.\n"
+"%s"
+msgstr ""
+"Não é possível alterar a prioridade do processo de PID %d para %d.\n"
+"%s"
+
+#: src/procactions.cpp:168
+#, c-format
+msgid ""
+"Cannot kill process with PID %d with signal %d.\n"
+"%s"
+msgstr ""
+"Não é possível matar o processo de PID %d com o sinal %d.\n"
+"%s"
+
+#. xgettext: primary alert message for killing single process
+#: src/procdialogs.cpp:88
+#, c-format
+msgid "Are you sure you want to kill the selected process “%s” (PID: %u)?"
+msgstr "Tem certeza que deseja matar o processo selecionado “%s” (PID: %u)?"
+
+#. xgettext: primary alert message for ending single process
+#: src/procdialogs.cpp:95
+#, c-format
+msgid "Are you sure you want to end the selected process “%s” (PID: %u)?"
+msgstr "Tem certeza que deseja terminar o processo selecionado “%s” (PID: %u)?"
+
+#. SIGSTOP
+#. xgettext: primary alert message for stopping single process
+#: src/procdialogs.cpp:102
+#, c-format
+msgid "Are you sure you want to stop the selected process “%s” (PID: %u)?"
+msgstr ""
+"Tem certeza que deseja interromper o processo selecionado “%s” (PID: %u)?"
+
+#. xgettext: primary alert message for killing multiple processes
+#: src/procdialogs.cpp:114
+#, c-format
+msgid "Are you sure you want to kill the selected process?"
+msgid_plural "Are you sure you want to kill the %d selected processes?"
+msgstr[0] "Tem certeza que deseja matar o processo selecionado?"
+msgstr[1] "Tem certeza que deseja matar os %d processos selecionados?"
+
+#. xgettext: primary alert message for ending multiple processes
+#: src/procdialogs.cpp:121
+#, c-format
+msgid "Are you sure you want to end the selected process?"
+msgid_plural "Are you sure you want to end the %d selected processes?"
+msgstr[0] "Tem certeza que deseja terminar o processo selecionado?"
+msgstr[1] "Tem certeza que deseja terminar os %d processos selecionados?"
+
+#. SIGSTOP
+#. xgettext: primary alert message for stopping multiple processes
+#: src/procdialogs.cpp:128
+#, c-format
+msgid "Are you sure you want to stop the selected process?"
+msgid_plural "Are you sure you want to stop the %d selected processes?"
+msgstr[0] "Tem certeza que deseja interromper o processo selecionado?"
+msgstr[1] "Tem certeza que deseja interromper os %d processos selecionados?"
+
+#. xgettext: secondary alert message
+#: src/procdialogs.cpp:139
+msgid ""
+"Killing a process may destroy data, break the session or introduce a "
+"security risk. Only unresponsive processes should be killed."
+msgstr ""
+"Matar um processo pode destruir dados, interromper a sessão atual ou criar "
+"um risco de segurança. Apenas processos que não respondem devem ser mortos."
+
+#: src/procdialogs.cpp:142
+msgid "_Kill Process"
+msgid_plural "_Kill Processes"
+msgstr[0] "_Matar processo"
+msgstr[1] "_Matar processos"
+
+#. xgettext: secondary alert message
+#: src/procdialogs.cpp:147
+msgid ""
+"Ending a process may destroy data, break the session or introduce a security "
+"risk. Only unresponsive processes should be ended."
+msgstr ""
+"Terminar um processo pode destruir seus dados, interromper a sessão atual ou "
+"criar um risco de segurança. Apenas processos que não respondem devem ser "
+"terminados."
+
+#. SIGSTOP
+#. xgettext: secondary alert message
+#: src/procdialogs.cpp:155
+msgid ""
+"Stopping a process may destroy data, break the session or introduce a "
+"security risk. Only unresponsive processes should be stopped."
+msgstr ""
+"Interromper um processo pode destruir seus dados, interromper a sessão atual "
+"ou criar um risco de segurança. Apenas processos que não respondem devem ser "
+"interrompidos."
+
+#: src/procdialogs.cpp:158
+msgid "_Stop Process"
+msgid_plural "_Stop Processes"
+msgstr[0] "_Interromper processo"
+msgstr[1] "_Interromper processo"
+
+#: src/procdialogs.cpp:253
+#, c-format
+msgid "Change Priority of Process “%s” (PID: %u)"
+msgstr "Alterar prioridade do processo “%s” (PID: %u)"
+
+#: src/procdialogs.cpp:256
+#, c-format
+msgid "Change Priority of the selected process"
+msgid_plural "Change Priority of %d selected processes"
+msgstr[0] "Altera a ordem de prioridade do processo selecionado"
+msgstr[1] "Altera a ordem de prioridade dos %d processos selecionados"
+
+#: src/procproperties.cpp:50 src/procproperties.cpp:84
+#: src/procproperties.cpp:87 src/util.cpp:540 src/util.cpp:587
+msgid "N/A"
+msgstr "N/D"
+
+#: src/procproperties.cpp:68 src/proctable.cpp:344
+msgid "Process Name"
+msgstr "Nome do processo"
+
+#: src/procproperties.cpp:69 src/proctable.cpp:345
+msgid "User"
+msgstr "Usuário"
+
+#: src/procproperties.cpp:70 src/proctable.cpp:346
+msgid "Status"
+msgstr "Estado"
+
+#: src/procproperties.cpp:72 src/proctable.cpp:347
+msgid "Virtual Memory"
+msgstr "Memória virtual"
+
+#: src/procproperties.cpp:73 src/proctable.cpp:348
+msgid "Resident Memory"
+msgstr "Memória residente"
+
+#: src/procproperties.cpp:74 src/proctable.cpp:349
+msgid "Writable Memory"
+msgstr "Memória gravável"
+
+#: src/procproperties.cpp:75 src/proctable.cpp:350
+msgid "Shared Memory"
+msgstr "Memória compartilhada"
+
+#: src/procproperties.cpp:79 src/proctable.cpp:353
+msgid "CPU Time"
+msgstr "Tempo da CPU"
+
+#: src/procproperties.cpp:80 src/proctable.cpp:354
+msgid "Started"
+msgstr "Iniciado"
+
+#: src/procproperties.cpp:81 src/proctable.cpp:355
+msgid "Nice"
+msgstr "Nice"
+
+#: src/procproperties.cpp:82 src/proctable.cpp:373
+msgid "Priority"
+msgstr "Prioridade"
+
+#: src/procproperties.cpp:83 src/proctable.cpp:356
+msgid "ID"
+msgstr "ID"
+
+#: src/procproperties.cpp:84 src/proctable.cpp:357
+msgid "Security Context"
+msgstr "Contexto de segurança"
+
+#: src/procproperties.cpp:85 src/proctable.cpp:358
+msgid "Command Line"
+msgstr "Linha de comando"
+
+#. xgettext: combined noun, the function the process is waiting in, see wchan ps(1)
+#: src/procproperties.cpp:86 src/proctable.cpp:361
+msgid "Waiting Channel"
+msgstr "Aguardando canal"
+
+#: src/procproperties.cpp:87 src/proctable.cpp:362
+msgid "Control Group"
+msgstr "Grupo de controle"
+
+#: src/procproperties.cpp:209
+#, c-format
+msgid "%s (PID %u)"
+msgstr "%s (PID %u)"
+
+#: src/proctable.cpp:351
+msgid "X Server Memory"
+msgstr "Memória do servidor X"
+
+#: src/proctable.cpp:352
+#, no-c-format
+msgid "% CPU"
+msgstr "% CPU"
+
+#: src/proctable.cpp:363
+msgid "Unit"
+msgstr "Unidade"
+
+#: src/proctable.cpp:364
+msgid "Session"
+msgstr "Sessão"
+
+# Há suporte para multiterminais, portanto cada processo pode rodar em mais de um terminal. Para não confundir usuários, adota-se o nome Estação.
+#. TRANSLATORS: Seat = i.e. the physical seat the session of the process belongs to, only
+#. for multi-seat environments. See http://en.wikipedia.org/wiki/Multiseat_configuration
+#: src/proctable.cpp:367
+msgid "Seat"
+msgstr "Estação"
+
+#: src/proctable.cpp:368
+msgid "Owner"
+msgstr "Proprietário"
+
+#: src/proctable.cpp:369
+msgid "Disk read total"
+msgstr "Total de leitura do disco"
+
+#: src/proctable.cpp:370
+msgid "Disk write total"
+msgstr "Total de escrita no disco"
+
+#: src/proctable.cpp:371
+msgid "Disk read"
+msgstr "Leitura do disco"
+
+#: src/proctable.cpp:372
+msgid "Disk write"
+msgstr "Escrita no disco"
+
+#: src/setaffinity.cpp:298
+msgid "Set Affinity"
+msgstr "Definir afinidade"
+
+#: src/setaffinity.cpp:310
+msgid "_Apply"
+msgstr "_Aplicar"
+
+#: src/setaffinity.cpp:347
+#, c-format
+msgid "Select CPUs \"%s\" (PID %u) is allowed to run on:"
+msgstr "As CPUs \"%s\" (PID %u) têm permissão para executar em:"
+
+#. Create toggle all check box
+#: src/setaffinity.cpp:381
+msgid "Run on all CPUs"
+msgstr "Executar em todas as CPUs"
+
+#. Set check box label value to CPU [1..2048]
+#: src/setaffinity.cpp:400
+#, c-format
+msgid "CPU %d"
+msgstr "CPU %d"
+
+#: src/util.cpp:34
+msgid "Running"
+msgstr "Executando"
+
+#: src/util.cpp:38
+msgid "Stopped"
+msgstr "Parado"
+
+#: src/util.cpp:42
+msgid "Zombie"
+msgstr "Zumbi"
+
+#: src/util.cpp:46
+msgid "Uninterruptible"
+msgstr "Ininterrupto"
+
+#: src/util.cpp:50
+msgid "Sleeping"
+msgstr "Dormindo"
+
+#. xgettext: weeks, days
+#: src/util.cpp:108
+#, c-format
+msgid "%uw%ud"
+msgstr "%uw%ud"
+
+#. xgettext: days, hours (0 -> 23)
+#: src/util.cpp:112
+#, c-format
+msgid "%ud%02uh"
+msgstr "%ud%02uh"
+
+#. xgettext: hours (0 -> 23), minutes, seconds
+#: src/util.cpp:116
+#, c-format
+msgid "%u:%02u:%02u"
+msgstr "%u:%02u:%02u"
+
+#. xgettext: minutes, seconds, centiseconds
+#: src/util.cpp:119
+#, c-format
+msgid "%u:%02u.%02u"
+msgstr "%u:%02u.%02u"
+
+#: src/util.cpp:188
+msgid "Very High Priority"
+msgstr "Prioridade muito alta"
+
+#: src/util.cpp:190
+msgid "High Priority"
+msgstr "Prioridade alta"
+
+#: src/util.cpp:192
+msgid "Normal Priority"
+msgstr "Prioridade normal"
+
+#: src/util.cpp:194
+msgid "Low Priority"
+msgstr "Prioridade baixa"
+
+#: src/util.cpp:196
+msgid "Very Low Priority"
+msgstr "Prioridade muito baixa"
+
+#. xgettext: rate, 10MiB/s or 10Mbit/s
+#: src/util.cpp:820
+#, c-format
+msgid "%s/s"
+msgstr "%s/s"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Send End signal"
+#~ msgstr "Envia o sinal para terminar"
+
+#~ msgid "_End"
+#~ msgstr "T_erminar"
+
+#~ msgid "Graphs"
+#~ msgstr "Gráficos"
+
+#~ msgid "Received invalid color data\n"
+#~ msgstr "Recebidos dados de cor inválidos\n"
+
+#~ msgid "Width of process “Total disk read” column"
+#~ msgstr "Largura da coluna “Total de leitura do disco” do processo"
+
+#~ msgid "Show process “Total disk read” column on startup"
+#~ msgstr ""
+#~ "Mostra a coluna “Total de leitura do disco” do processo ao inicializar"
+
+#~ msgid "Width of process “Total disk write” column"
+#~ msgstr "Largura da coluna “Total de escrita no disco” do processo"
+
+#~ msgid "Show process “Total disk write” column on startup"
+#~ msgstr ""
+#~ "Mostra a coluna “Total de escrita no disco” do processo ao inicializar"
+
+#~ msgid "Note:"
+#~ msgstr "Nota:"
+
+#~ msgid ""
+#~ "The priority of a process is given by its nice value. A lower nice value "
+#~ "corresponds to a higher priority."
+#~ msgstr ""
+#~ "A prioridade de um processo é dada pelo seu valor nice. Quanto menor o "
+#~ "valor nice, maior a prioridade."
+
+#~ msgid "_Update Interval in Seconds:"
+#~ msgstr "_Intervalo de atualização em segundos:"
+
+#~ msgid "Show _all file systems"
+#~ msgstr "Mostrar _todos os sistemas de arquivos"
+
+#~ msgid "CPU History"
+#~ msgstr "Histórico da CPU"
+
+#~ msgid "System Monitor Preferences"
+#~ msgstr "Preferências do monitor do sistema"
+
+#~ msgid "End _Process"
+#~ msgstr "_Terminar processo"
+
+#~| msgid "gnome-system-monitor"
+#~ msgid "org.gnome.SystemMonitor"
+#~ msgstr "org.gnome.SystemMonitor"
+
+#~ msgid "utilities-system-monitor"
+#~ msgstr "utilities-system-monitor"
+
+#~ msgid "About"
+#~ msgstr "Sobre"
+
+#~ msgid "%.1f KiB"
+#~ msgstr "%.1f KB"
+
+#~ msgid "%.1f MiB"
+#~ msgstr "%.1f MB"
+
+#~ msgid "%.1f GiB"
+#~ msgstr "%.1f GB"
+
+#~ msgid "%.1f TiB"
+#~ msgstr "%.1f TB"
+
+#~ msgid "%.3g kbit"
+#~ msgstr "%.3g kbit"
+
+#~ msgid "%.3g Mbit"
+#~ msgstr "%.3g Mbit"
+
+#~ msgid "%.3g Gbit"
+#~ msgstr "%.3g Gbit"
+
+#~ msgid "%.3g Tbit"
+#~ msgstr "%.3g Tbit"
+
+#~ msgid "%u bit"
+#~ msgid_plural "%u bits"
+#~ msgstr[0] "%u bit"
+#~ msgstr[1] "%u bits"
+
+#~ msgid "%u byte"
+#~ msgid_plural "%u bytes"
+#~ msgstr[0] "%u byte"
+#~ msgstr[1] "%u bytes"
+
+#~ msgctxt "Menu item to Open 'Search for Open Files' dialog"
+#~ msgid "Search for Open Files"
+#~ msgstr "Pesquisar por arquivos abertos"
+
+#~ msgid "Error"
+#~ msgstr "Erro"
+
+#~ msgid "'%s' is not a valid Perl regular expression."
+#~ msgstr "\"%s\" não é uma expressão regular Perl válida."
+
+#~ msgid "%lld second"
+#~ msgid_plural "%lld seconds"
+#~ msgstr[0] "%lld segundo"
+#~ msgstr[1] "%lld segundos"
+
+#~ msgid "_Name contains:"
+#~ msgstr "_Nome contém:"
+
+#~ msgid "_Find"
+#~ msgstr "L_ocalizar"
+
+#~ msgid "C_lear"
+#~ msgstr "_Limpar"
+
+#~ msgid "S_earch results:"
+#~ msgstr "R_esultados da busca:"
+
+#~ msgid "_Close"
+#~ msgstr "_Fechar"
+
+#~ msgid "_Help"
+#~ msgstr "Aj_uda"
+
+#~ msgid "Process Properties"
+#~ msgstr "Propriedades do processo"
+
+#~ msgid "Properties of process \"%s\" (PID %u):"
+#~ msgstr "Propriedades do processo \"%s\" (PID: %u):"
+
+#~ msgid "Show processor usage graph"
+#~ msgstr "Mostrar um gráfico de uso do processador"
+
+#~ msgid "Show network traffic graph"
+#~ msgstr "Mostrar um gráfico do tráfego da rede"
+
+#~ msgid "Sensitive"
+#~ msgstr "Sensitivo"
+
+#~ msgid "The sensitivity value"
+#~ msgstr "O valor sensitivo"
+
+#~ msgid "Load averages for the last 1, 5, 15 minutes: %0.2f, %0.2f, %0.2f"
+#~ msgstr ""
+#~ "Média de carregamento para os últimos 1, 5, 15 minutos: %0.2f, %0.2f, "
+#~ "%0.2f"
+
+#~ msgid "View"
+#~ msgstr "Ver"
+
+#~ msgid "Main Window width"
+#~ msgstr "Largura da janela principal"
+
+#~ msgid "Main Window height"
+#~ msgstr "Altura da janela principal"
+
+#~ msgid "Main Window X position"
+#~ msgstr "Posição X da janela principal"
+
+#~ msgid "Main Window Y position"
+#~ msgstr "Posição Y da janela principal"
+
+#~ msgid "Privileges are required to kill process"
+#~ msgstr "São necessários privilégios para matar o processo"
+
+#~ msgid "_View"
+#~ msgstr "_Ver"
+
+#~ msgid "Stop process"
+#~ msgstr "Pára o processo"
+
+#~ msgid "Continue process if stopped"
+#~ msgstr "Continua o processo se estiver parado"
+
+#~ msgid "Force process to finish normally"
+#~ msgstr "Força o processo a finalizar normalmente"
+
+#~ msgid "Force process to finish immediately"
+#~ msgstr "Força um processo a finalizar imediatamente"
+
+#~ msgid "Refresh the process list"
+#~ msgstr "Atualiza a lista de processos"
+
+#~ msgid "Open the memory maps associated with a process"
+#~ msgstr "Abre os mapas de memória associados a um processo"
+
+#~ msgid "View the files opened by a process"
+#~ msgstr "Visualiza os arquivos abertos por um processo"
+
+#~ msgid "View additional information about a process"
+#~ msgstr "Ver informações adicionais sobre um processo"
+
+#~ msgid "Show parent/child relationship between processes"
+#~ msgstr "Mostra o relacionamento pai/filho entre processos"
+
+#~ msgid "Show active processes"
+#~ msgstr "Mostra os processos ativos"
+
+#~ msgid "Show only user-owned processes"
+#~ msgstr "Mostra somente os processos do usuário"
+
+#~ msgid "Set process priority to very high"
+#~ msgstr "Define a prioridade do processo para muito alta"
+
+#~ msgid "Set process priority to high"
+#~ msgstr "Define a prioridade do processo para alta"
+
+#~ msgid "Set process priority to normal"
+#~ msgstr "Definir a prioridade do processo para normal"
+
+#~ msgid "Set process priority to low"
+#~ msgstr "Define a prioridade do processo para baixa"
+
+#~ msgid "Set process priority to very low"
+#~ msgstr "Define a prioridade do processo para muito baixa"
+
+#~ msgid "Set process priority manually"
+#~ msgstr "Define manualmente a prioridade do processo"
+
+#~ msgid ""
+#~ "Determines which processes to show by default. 0 is All, 1 is user, and 2 "
+#~ "is active"
+#~ msgstr ""
+#~ "Determina quais processos mostrar por padrão. 0 = todos, 1 = usuário e 2 "
+#~ "= ativos"
+
+#~ msgid ""
+#~ "0 for the processes list, 1 for the resources and 2 for the disks list"
+#~ msgstr ""
+#~ "0 para a lista de processos, 1 para a lista de recursos e 2 para a lista "
+#~ "de discos"
+
+#~ msgid "Sent"
+#~ msgstr "Enviados"
+
+#~ msgid "System"
+#~ msgstr "Sistema"
+
+#~ msgid "Show the System tab"
+#~ msgstr "Exibir a aba sistema"
+
+#~ msgid "_Monitor"
+#~ msgstr "_Monitor"
+
+#~ msgid "_Edit"
+#~ msgstr "_Editar"
+
+#~ msgid "Search for _Open Files"
+#~ msgstr "Pesquisar por _arquivos abertos"
+
+#~ msgid "Quit the program"
+#~ msgstr "Sai do programa"
+
+#~ msgid "_Contents"
+#~ msgstr "S_umário"
+
+#~ msgid "About this application"
+#~ msgstr "Sobre este aplicativo"
+
+#~ msgid "(%s Priority)"
+#~ msgstr "(Prioridade %s)"
+
+#~ msgid "Release %s %s"
+#~ msgstr "Lançamento %s %s"
+
+#~ msgid "%d-bit"
+#~ msgstr "%d-bit"
+
+#~ msgid "Kernel %s"
+#~ msgstr "Kernel %s"
+
+#~ msgid "GNOME %s"
+#~ msgstr "GNOME %s"
+
+#~ msgid "Hardware"
+#~ msgstr "Hardware"
+
+#~ msgid "Memory:"
+#~ msgstr "Memória:"
+
+#~ msgid "Processor:"
+#~ msgstr "Processador:"
+
+#~ msgid "System Status"
+#~ msgstr "Status do sistema"
+
+#~ msgid "Available disk space:"
+#~ msgstr "Espaço disponível no disco:"
+
+#~ msgid "Unknown model"
+#~ msgstr "Modelo desconhecido"
+
+#~ msgid "<i>N/A</i>"
+#~ msgstr "<i>N/A</i>"

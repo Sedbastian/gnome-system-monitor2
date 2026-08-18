@@ -1,0 +1,164 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk" version="4.0"/>
+  <menu id="generic-window-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes" context="Menu item to Open Search for Open Files dialog">Search for Open Files…</attribute>
+        <attribute name="action">app.lsof</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Preferences</attribute>
+        <attribute name="action">app.preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Help</attribute>
+        <attribute name="action">app.help</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">About System Monitor</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="process-window-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Refresh</attribute>
+        <attribute name="action">win.refresh</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Active Processes</attribute>
+        <attribute name="action">win.show-whose-processes</attribute>
+        <attribute name="target">active</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">A_ll Processes</attribute>
+        <attribute name="action">win.show-whose-processes</attribute>
+        <attribute name="target">all</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">M_y Processes</attribute>
+        <attribute name="action">win.show-whose-processes</attribute>
+        <attribute name="target">user</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Show _Dependencies</attribute>
+        <attribute name="action">win.show-dependencies</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes" context="Menu item to Open Search for Open Files dialog">Search for Open Files…</attribute>
+        <attribute name="action">app.lsof</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Preferences</attribute>
+        <attribute name="action">app.preferences</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Help</attribute>
+        <attribute name="action">app.help</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Keyboard Shortcuts</attribute>
+        <attribute name="action">win.show-help-overlay</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">About System Monitor</attribute>
+        <attribute name="action">win.about</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="process-popup-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Properties</attribute>
+        <attribute name="action">win.process-properties</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Memory Maps</attribute>
+        <attribute name="action">win.memory-maps</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" comments="Translators: this means 'Files that are open' (open is not a verb here)">Open _Files</attribute>
+        <attribute name="action">win.open-files</attribute>
+      </item>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">_Change Priority</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Very High</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">-20</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">High</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">-5</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Normal</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">0</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Low</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">5</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Very Low</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">19</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Custom</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">32</attribute>
+          </item>
+        </section>
+      </submenu>
+      <item>
+        <attribute name="label" translatable="yes">Set _Affinity…</attribute>
+        <attribute name="action">win.set-affinity</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Stop…</attribute>
+        <attribute name="action">win.send-signal-stop</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Continue</attribute>
+        <attribute name="action">win.send-signal-cont</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Terminate…</attribute>
+        <attribute name="action">win.send-signal-term</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Kill…</attribute>
+        <attribute name="action">win.send-signal-kill</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

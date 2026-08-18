@@ -1,0 +1,10 @@
+option('wnck',    type: 'boolean', value: false,
+  description: 'enable wnck support, this will likely make system-monitor segfault'
+)
+option('systemd', type: 'boolean', value: true,
+  description: 'systemd support'
+)
+
+option('development', type: 'boolean', value: false,
+  description: 'If this is a development build'
+)
