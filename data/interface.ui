@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
   <requires lib="gtk" version="4.0"/>
-  <requires lib="libadwaita" version="1.0"/>
+  <requires lib="libadwaita" version="1.4"/>
   <object class="AdwApplicationWindow" id="main_window">
     <property name="title" translatable="yes">System Monitor</property>
     <property name="icon-name">org.gnome.SystemMonitor</property>
+    <!-- AdwBreakpoint requires the window itself to declare its minimum size. -->
+    <property name="width-request">620</property>
+    <property name="height-request">480</property>
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 1000sp</condition>
+          <setter object="net_in_total_box" property="visible">False</setter>
+          <setter object="net_out_total_box" property="visible">False</setter>
+          <setter object="disk_read_total_box" property="visible">False</setter>
+          <setter object="disk_write_total_box" property="visible">False</setter>
+      </object>
+    </child>
+    <child>
+      <object class="AdwBreakpoint">
+        <condition>max-width: 820sp</condition>
+          <setter object="net_in_total_box" property="visible">False</setter>
+          <setter object="net_out_total_box" property="visible">False</setter>
+          <setter object="disk_read_total_box" property="visible">False</setter>
+          <setter object="disk_write_total_box" property="visible">False</setter>
+          <setter object="memory_label" property="visible">False</setter>
+          <setter object="swap_label" property="visible">False</setter>
+          <setter object="receiving_label" property="visible">False</setter>
+          <setter object="sending_label" property="visible">False</setter>
+          <setter object="reading_label" property="visible">False</setter>
+          <setter object="writing_label" property="visible">False</setter>
+      </object>
+    </child>
     <child>
       <object class="AdwToolbarView" id="main_box">
         <property name="width-request">620</property>
@@ -137,12 +164,12 @@
                       <object class="GtkBox" id="res_box">
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
-                        <property name="margin-top">12</property>
-                        <property name="margin-bottom">30</property>
-                        <property name="margin-start">24</property>
-                        <property name="margin-end">24</property>
+                        <property name="margin-top">6</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="margin-start">18</property>
+                        <property name="margin-end">18</property>
                         <property name="orientation">vertical</property>
-                        <property name="spacing">10</property>
+                        <property name="spacing">6</property>
                         <child>
                           <object class="GtkExpander" id="cpu_expander">
                             <property name="vexpand">True</property>
@@ -152,30 +179,40 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">6</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkGrid" id="cpu_table">
-                                    <property name="margin-start">21</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="row-spacing">1</property>
-                                    <property name="column-spacing">6</property>
-                                    <property name="row-homogeneous">True</property>
-                                    <property name="column-homogeneous">True</property>
-                                  </object>
-                                </child>
+                                <property name="margin-top">4</property>
                               </object>
                             </child>
                             <child type="label">
                               <object class="GtkBox" id="cpu_header">
                                 <property name="margin-start">6</property>
+                                <property name="spacing">12</property>
+                                <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkLabel" id="cpu_label">
                                     <property name="halign">start</property>
+                                    <property name="valign">center</property>
                                     <property name="label" translatable="yes">CPU</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="cpu_legend_scroller">
+                                    <property name="hscrollbar-policy">external</property>
+                                    <property name="vscrollbar-policy">never</property>
+                                    <property name="propagate-natural-width">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="valign">center</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="child">
+                                      <object class="GtkBox" id="cpu_legend">
+                                        <property name="orientation">horizontal</property>
+                                        <property name="spacing">14</property>
+                                        <property name="halign">end</property>
+                                        <property name="valign">center</property>
+                                      </object>
+                                    </property>
                                   </object>
                                 </child>
                               </object>
@@ -191,50 +228,64 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">6</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkGrid" id="mem_table">
-                                    <property name="margin-start">54</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="column-spacing">6</property>
-                                    <property name="row-homogeneous">True</property>
-                                    <child>
-                                      <object class="GtkLabel" id="memory_label">
-                                        <property name="hexpand">True</property>
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Memory</property>
-                                        <layout>
-                                          <property name="column">1</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="swap_label">
-                                        <property name="hexpand">True</property>
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Swap</property>
-                                        <layout>
-                                          <property name="column">3</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
+                                <property name="margin-top">4</property>
                               </object>
                             </child>
                             <child type="label">
                               <object class="GtkBox" id="mem_header">
                                 <property name="margin-start">6</property>
+                                <property name="spacing">12</property>
+                                <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkLabel" id="mem_label">
                                     <property name="halign">start</property>
+                                    <property name="valign">center</property>
                                     <property name="label" translatable="yes">Memory and Swap</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="mem_legend_scroller">
+                                    <property name="hscrollbar-policy">external</property>
+                                    <property name="vscrollbar-policy">never</property>
+                                    <property name="propagate-natural-width">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="valign">center</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="child">
+                                      <object class="GtkBox" id="mem_legend">
+                                        <property name="orientation">horizontal</property>
+                                        <property name="spacing">14</property>
+                                        <property name="halign">end</property>
+                                        <property name="valign">center</property>
+                                        <child>
+                                          <object class="GtkBox" id="mem_entry">
+                                            <property name="spacing">4</property>
+                                            <property name="valign">center</property>
+                                            <child>
+                                              <object class="GtkLabel" id="memory_label">
+                                                <property name="valign">center</property>
+                                                <property name="label" translatable="yes">Memory</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox" id="swap_entry">
+                                            <property name="spacing">4</property>
+                                            <property name="valign">center</property>
+                                            <child>
+                                              <object class="GtkLabel" id="swap_label">
+                                                <property name="valign">center</property>
+                                                <property name="label" translatable="yes">Swap</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </property>
                                   </object>
                                 </child>
                               </object>
@@ -250,69 +301,88 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">6</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkGrid" id="net_table">
-                                    <property name="margin-start">54</property>
-                                    <property name="margin-end">12</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="column-spacing">6</property>
-                                    <property name="row-homogeneous">True</property>
-                                    <child>
-                                      <object class="GtkLabel" id="receiving_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Receiving</property>
-                                        <layout>
-                                          <property name="column">1</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="total_received_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Total Received</property>
-                                        <layout>
-                                          <property name="column">1</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="sending_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Sending</property>
-                                        <layout>
-                                          <property name="column">5</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="total_sent_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Total Sent</property>
-                                        <layout>
-                                          <property name="column">5</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
+                                <property name="margin-top">4</property>
                               </object>
                             </child>
                             <child type="label">
                               <object class="GtkBox" id="net_header">
                                 <property name="margin-start">6</property>
+                                <property name="spacing">12</property>
+                                <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkLabel" id="net_label">
                                     <property name="halign">start</property>
+                                    <property name="valign">center</property>
                                     <property name="label" translatable="yes">Network</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="net_legend_scroller">
+                                    <property name="hscrollbar-policy">external</property>
+                                    <property name="vscrollbar-policy">never</property>
+                                    <property name="propagate-natural-width">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="valign">center</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="child">
+                                      <object class="GtkBox" id="net_legend">
+                                        <property name="orientation">horizontal</property>
+                                        <property name="spacing">14</property>
+                                        <property name="halign">end</property>
+                                        <property name="valign">center</property>
+                                        <child>
+                                          <object class="GtkBox" id="net_in_entry">
+                                            <property name="spacing">4</property>
+                                            <property name="valign">center</property>
+                                            <child>
+                                              <object class="GtkLabel" id="receiving_label">
+                                                <property name="valign">center</property>
+                                                <property name="label" translatable="yes">Receiving</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="total_received_label">
+                                                <property name="valign">center</property>
+                                                <property name="visible">False</property>
+                                                <property name="label" translatable="yes">Total Received</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkBox" id="net_in_total_box">
+                                                <property name="valign">center</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox" id="net_out_entry">
+                                            <property name="spacing">4</property>
+                                            <property name="valign">center</property>
+                                            <child>
+                                              <object class="GtkLabel" id="sending_label">
+                                                <property name="valign">center</property>
+                                                <property name="label" translatable="yes">Sending</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="total_sent_label">
+                                                <property name="valign">center</property>
+                                                <property name="visible">False</property>
+                                                <property name="label" translatable="yes">Total Sent</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkBox" id="net_out_total_box">
+                                                <property name="valign">center</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </property>
                                   </object>
                                 </child>
                               </object>
@@ -328,69 +398,88 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">6</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkGrid" id="disk_table">
-                                    <property name="margin-start">54</property>
-                                    <property name="margin-end">12</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="column-spacing">6</property>
-                                    <property name="row-homogeneous">True</property>
-                                    <child>
-                                      <object class="GtkLabel" id="reading_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Reading</property>
-                                        <layout>
-                                          <property name="column">1</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="total_read_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Total Read</property>
-                                        <layout>
-                                          <property name="column">1</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="writing_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Writing</property>
-                                        <layout>
-                                          <property name="column">5</property>
-                                          <property name="row">0</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkLabel" id="total_written_label">
-                                        <property name="halign">start</property>
-                                        <property name="label" translatable="yes">Total Written</property>
-                                        <layout>
-                                          <property name="column">5</property>
-                                          <property name="row">1</property>
-                                        </layout>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
+                                <property name="margin-top">4</property>
                               </object>
                             </child>
                             <child type="label">
                               <object class="GtkBox" id="disk_header">
                                 <property name="margin-start">6</property>
+                                <property name="spacing">12</property>
+                                <property name="hexpand">True</property>
                                 <child>
                                   <object class="GtkLabel" id="disk_label">
                                     <property name="halign">start</property>
+                                    <property name="valign">center</property>
                                     <property name="label" translatable="yes">Disk</property>
                                     <attributes>
                                       <attribute name="weight" value="bold"/>
                                     </attributes>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkScrolledWindow" id="disk_legend_scroller">
+                                    <property name="hscrollbar-policy">external</property>
+                                    <property name="vscrollbar-policy">never</property>
+                                    <property name="propagate-natural-width">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="valign">center</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="child">
+                                      <object class="GtkBox" id="disk_legend">
+                                        <property name="orientation">horizontal</property>
+                                        <property name="spacing">14</property>
+                                        <property name="halign">end</property>
+                                        <property name="valign">center</property>
+                                        <child>
+                                          <object class="GtkBox" id="disk_read_entry">
+                                            <property name="spacing">4</property>
+                                            <property name="valign">center</property>
+                                            <child>
+                                              <object class="GtkLabel" id="reading_label">
+                                                <property name="valign">center</property>
+                                                <property name="label" translatable="yes">Reading</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="total_read_label">
+                                                <property name="valign">center</property>
+                                                <property name="visible">False</property>
+                                                <property name="label" translatable="yes">Total Read</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkBox" id="disk_read_total_box">
+                                                <property name="valign">center</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkBox" id="disk_write_entry">
+                                            <property name="spacing">4</property>
+                                            <property name="valign">center</property>
+                                            <child>
+                                              <object class="GtkLabel" id="writing_label">
+                                                <property name="valign">center</property>
+                                                <property name="label" translatable="yes">Writing</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="total_written_label">
+                                                <property name="valign">center</property>
+                                                <property name="visible">False</property>
+                                                <property name="label" translatable="yes">Total Written</property>
+                                              </object>
+                                            </child>
+                                            <child>
+                                              <object class="GtkBox" id="disk_write_total_box">
+                                                <property name="valign">center</property>
+                                              </object>
+                                            </child>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </property>
                                   </object>
                                 </child>
                               </object>

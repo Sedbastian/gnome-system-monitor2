@@ -867,6 +867,12 @@ init_tnum_label (gint     char_width,
   gtk_widget_set_valign (GTK_WIDGET (label), GTK_ALIGN_CENTER);
   gtk_widget_set_halign (GTK_WIDGET (label), halign);
 
+  /* Keep the text flush with the requested edge instead of floating in the
+     middle of the reserved width. */
+  gtk_label_set_xalign (label,
+                        halign == GTK_ALIGN_START ? 0.0 :
+                        halign == GTK_ALIGN_END ? 1.0 : 0.5);
+
   return label;
 }
 

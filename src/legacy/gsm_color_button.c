@@ -220,8 +220,6 @@ gsm_color_button_snapshot (GtkWidget   *widget,
         break;
 
       case GSMCP_TYPE_PIE:
-        if (width < 32)         // 32px minimum size
-          gtk_widget_set_size_request (widget, 32, 32);
         if (width < height)
           radius = width / 2;
         else
@@ -301,7 +299,6 @@ gsm_color_button_snapshot (GtkWidget   *widget,
           priv->mask_buffer =
             fill_image_buffer_from_resource (cr, "/org/gnome/gnome-system-monitor/pixmaps/arrow_mask.svg");
 
-        gtk_widget_set_size_request (widget, 32, 32);
         gsm_color_button_draw_colored_icon (cr, priv->image_buffer, priv->mask_buffer, TRUE);
 
         break;
@@ -314,7 +311,6 @@ gsm_color_button_snapshot (GtkWidget   *widget,
           priv->mask_buffer =
             fill_image_buffer_from_resource (cr, "/org/gnome/gnome-system-monitor/pixmaps/arrow_mask.svg");
 
-        gtk_widget_set_size_request (widget, 32, 32);
         gsm_color_button_draw_colored_icon (cr, priv->image_buffer, priv->mask_buffer, FALSE);
 
         break;
@@ -327,7 +323,6 @@ gsm_color_button_snapshot (GtkWidget   *widget,
           priv->mask_buffer =
             fill_image_buffer_from_resource (cr, "/org/gnome/gnome-system-monitor/pixmaps/arrow_mask.svg");
 
-        gtk_widget_set_size_request (widget, 32, 32);
         gsm_color_button_draw_colored_icon (cr, priv->image_buffer, priv->mask_buffer, FALSE);
 
         break;
@@ -340,7 +335,6 @@ gsm_color_button_snapshot (GtkWidget   *widget,
           priv->mask_buffer =
             fill_image_buffer_from_resource (cr, "/org/gnome/gnome-system-monitor/pixmaps/arrow_mask.svg");
 
-        gtk_widget_set_size_request (widget, 32, 32);
         gsm_color_button_draw_colored_icon (cr, priv->image_buffer, priv->mask_buffer, TRUE);
 
         break;
@@ -356,12 +350,15 @@ gsm_color_button_measure (GtkWidget*,
                           int*,
                           int*)
 {
-  if (orientation & GTK_ORIENTATION_HORIZONTAL)
+  /* GTK_ORIENTATION_HORIZONTAL is 0, so the usual bitmask test never fires and
+     the widget ends up 0 pixels wide. It used to be papered over by the size
+     requests that forced every swatch to 32x32. */
+  if (orientation == GTK_ORIENTATION_HORIZONTAL)
     {
       *minimum = GSMCP_MIN_WIDTH;
       *natural = GSMCP_MIN_WIDTH;
     }
-  if (orientation & GTK_ORIENTATION_VERTICAL)
+  else
     {
       *minimum = GSMCP_MIN_HEIGHT;
       *natural = GSMCP_MIN_HEIGHT;
@@ -407,13 +404,17 @@ dialog_destroy (GtkWidget*,
 }
 
 static void
-gsm_color_button_released (GtkGestureClick*,
+gsm_color_button_released (GtkGestureClick *gesture,
                            gint,
                            gdouble,
                            gdouble,
                            GsmColorButton *color_button)
 {
   GsmColorButtonPrivate *priv = gsm_color_button_get_instance_private (color_button);
+
+  /* Stop here: these buttons live on the title row of a GtkExpander, whose own
+     click gesture would otherwise fold the section away under us. */
+  gtk_gesture_set_state (GTK_GESTURE (gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 
   /* if dialog already exists, make sure it's shown and raised */
   if (!priv->cc_dialog)
@@ -638,6 +639,7 @@ gsm_color_button_init (GsmColorButton *color_button)
 
   GtkGesture *click_controller = gtk_gesture_click_new ();
 
+  gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (click_controller), GDK_BUTTON_PRIMARY);
   g_signal_connect (click_controller, "released",
                     G_CALLBACK (gsm_color_button_released), color_button);
   gtk_widget_add_controller (GTK_WIDGET (color_button), GTK_EVENT_CONTROLLER (click_controller));

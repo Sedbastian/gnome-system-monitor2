@@ -551,9 +551,13 @@ set_memory_label_and_picker (GtkLabel      *label,
 
       if (cached != 0)
         {
+          char*used_label = text;
+
           // xgettext: Used cache string, e.g.: "Cache 2.4GiB" or "Cache 2.4GB"
           cached_label = g_strdup_printf (_("Cache %s"), cached_text);
-          text = g_strdup_printf ("%s\n%s", text, cached_label);
+          // The label sits on the section title row, so keep it to one line.
+          text = g_strdup_printf ("%s \xc2\xb7 %s", used_label, cached_label);
+          g_free (used_label);
           g_free (cached_label);
         }
     }
@@ -805,11 +809,18 @@ handle_dynamic_max_value (LoadGraph             *graph,
 
   dynamic_scale (graph, values, max, din, dout, in_bits);
 
+  char*total_text;
+
   gtk_label_set_text (GTK_LABEL (label_in), procman::format_rate (din, in_bits).c_str ());
-  gtk_label_set_text (GTK_LABEL (label_in_total), procman::format_volume (in, totals_in_bits).c_str ());
+  // The running total follows the rate on the section title row: "1.2 MiB/s (3.4 GiB)".
+  total_text = g_strdup_printf ("(%s)", procman::format_volume (in, totals_in_bits).c_str ());
+  gtk_label_set_text (GTK_LABEL (label_in_total), total_text);
+  g_free (total_text);
 
   gtk_label_set_text (GTK_LABEL (label_out), procman::format_rate (dout, in_bits).c_str ());
-  gtk_label_set_text (GTK_LABEL (label_out_total), procman::format_volume (out, totals_in_bits).c_str ());
+  total_text = g_strdup_printf ("(%s)", procman::format_volume (out, totals_in_bits).c_str ());
+  gtk_label_set_text (GTK_LABEL (label_out_total), total_text);
+  g_free (total_text);
 }
 
 static void
@@ -973,28 +984,28 @@ LoadGraph::LoadGraph(guint type)
 
       case LOAD_GRAPH_MEM:
         n = 2;
-        labels.memory = init_tnum_label (10, GTK_ALIGN_START);
-        labels.swap = init_tnum_label (10, GTK_ALIGN_START);
+        labels.memory = init_tnum_label (30, GTK_ALIGN_START);
+        labels.swap = init_tnum_label (30, GTK_ALIGN_START);
         break;
 
       case LOAD_GRAPH_NET:
         net = NET {};
         n = 2;
         net.max = 1;
-        labels.net_in = init_tnum_label (10, GTK_ALIGN_END);
-        labels.net_in_total = init_tnum_label (10, GTK_ALIGN_END);
-        labels.net_out = init_tnum_label (10, GTK_ALIGN_END);
-        labels.net_out_total = init_tnum_label (10, GTK_ALIGN_END);
+        labels.net_in = init_tnum_label (11, GTK_ALIGN_END);
+        labels.net_in_total = init_tnum_label (12, GTK_ALIGN_START);
+        labels.net_out = init_tnum_label (11, GTK_ALIGN_END);
+        labels.net_out_total = init_tnum_label (12, GTK_ALIGN_START);
         break;
 
       case LOAD_GRAPH_DISK:
         disk = DISK {};
         n = 2;
         disk.max = 1;
-        labels.disk_read = init_tnum_label (16, GTK_ALIGN_END);
-        labels.disk_read_total = init_tnum_label (16, GTK_ALIGN_END);
-        labels.disk_write = init_tnum_label (10, GTK_ALIGN_END);
-        labels.disk_write_total = init_tnum_label (10, GTK_ALIGN_END);
+        labels.disk_read = init_tnum_label (11, GTK_ALIGN_END);
+        labels.disk_read_total = init_tnum_label (12, GTK_ALIGN_START);
+        labels.disk_write = init_tnum_label (11, GTK_ALIGN_END);
+        labels.disk_write_total = init_tnum_label (12, GTK_ALIGN_START);
         break;
     }
 
@@ -1017,9 +1028,9 @@ LoadGraph::LoadGraph(guint type)
         colors[0] = GsmApplication::get ()->config.mem_color;
         colors[1] = GsmApplication::get ()->config.swap_color;
         mem_color_picker = gsm_color_button_new (&colors[0],
-                                                 GSMCP_TYPE_PIE);
+                                                 GSMCP_TYPE_CPU);
         swap_color_picker = gsm_color_button_new (&colors[1],
-                                                  GSMCP_TYPE_PIE);
+                                                  GSMCP_TYPE_CPU);
         gsm_graph_set_max_value (disp, 100);
         break;
 

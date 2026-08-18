@@ -222,6 +222,73 @@ cb_disk_write_color_changed (GsmColorButton *cp,
   change_settings_color (*app->settings.operator-> (), GSM_SETTING_DISK_WRITE_COLOR, cp);
 }
 
+/* The legend lives in a horizontally scrolling window, and GTK turns a vertical
+   wheel into horizontal scrolling whenever that is the only axis a scrolled
+   window can move. That would make the wheel stop scrolling the page while the
+   pointer is over a section title, so send the vertical delta on to the page
+   instead. Shift+wheel still scrolls the legend itself. */
+static gboolean
+legend_scroll_page (GtkEventControllerScroll*,
+                    gdouble,
+                    gdouble  dy,
+                    gpointer user_data)
+{
+  GtkAdjustment *adj = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (user_data));
+  gdouble upper = gtk_adjustment_get_upper (adj) - gtk_adjustment_get_page_size (adj);
+
+  gtk_adjustment_set_value (adj,
+                            CLAMP (gtk_adjustment_get_value (adj)
+                                   + dy * gtk_adjustment_get_step_increment (adj),
+                                   gtk_adjustment_get_lower (adj),
+                                   upper));
+
+  return GDK_EVENT_STOP;
+}
+
+static void
+legend_forward_scroll (GtkBuilder  *builder,
+                       const gchar *scroller_id)
+{
+  GtkWidget *scroller = GTK_WIDGET (gtk_builder_get_object (builder, scroller_id));
+  GtkEventController *scroll = gtk_event_controller_scroll_new (GTK_EVENT_CONTROLLER_SCROLL_VERTICAL);
+
+  gtk_event_controller_set_propagation_phase (scroll, GTK_PHASE_CAPTURE);
+  g_signal_connect (scroll, "scroll", G_CALLBACK (legend_scroll_page),
+                    gtk_builder_get_object (builder, "res_scrolled"));
+  gtk_widget_add_controller (scroller, scroll);
+}
+
+/* Append a legend entry to the box that lives on a section's title row.
+   Every entry is [color swatch][name][value…], vertically centred so that the
+   row never gets taller than the bold section title next to it. */
+static GtkBox *
+legend_entry_new (GtkBox *legend)
+{
+  GtkBox *entry = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4));
+
+  gtk_widget_set_valign (GTK_WIDGET (entry), GTK_ALIGN_CENTER);
+  gtk_box_append (legend, GTK_WIDGET (entry));
+
+  return entry;
+}
+
+/* The network and disk legends show the running total after the rate. The
+   word ("Total Received"…) does not fit on the title row, so it becomes the
+   tooltip of the value it describes. The total goes into its own box so that
+   a breakpoint can drop it when the window gets too narrow. */
+static void
+legend_add_total (GtkBuilder  *builder,
+                  GtkLabel    *value,
+                  const gchar *box_id,
+                  const gchar *word_id)
+{
+  GtkBox *box = GTK_BOX (gtk_builder_get_object (builder, box_id));
+  GtkLabel *word = GTK_LABEL (gtk_builder_get_object (builder, word_id));
+
+  gtk_widget_set_tooltip_text (GTK_WIDGET (value), gtk_label_get_text (word));
+  gtk_box_append (box, GTK_WIDGET (value));
+}
+
 static void
 create_sys_view (GsmApplication *app,
                  GtkBuilder     *builder)
@@ -229,7 +296,7 @@ create_sys_view (GsmApplication *app,
   GtkBox *cpu_graph_box, *mem_graph_box, *net_graph_box, *disk_graph_box;
   GtkExpander *cpu_expander, *mem_expander, *net_expander, *disk_expander;
   GtkLabel *label, *cpu_label;
-  GtkGrid *table;
+  GtkBox *entry;
   GsmColorButton *color_picker;
   GtkCssProvider *provider;
 
@@ -257,46 +324,49 @@ create_sys_view (GsmApplication *app,
   gtk_box_prepend (cpu_graph_box,
                    GTK_WIDGET (load_graph_get_widget (cpu_graph)));
 
-  GtkGrid*cpu_table = GTK_GRID (gtk_builder_get_object (builder, "cpu_table"));
-  gint cols = 4;
-  gint rows = (app->config.num_cpus + cols - 1) / cols;
+  GtkBox*cpu_legend = GTK_BOX (gtk_builder_get_object (builder, "cpu_legend"));
+
+  /* Past a handful of cores the per-core name stops fitting on the title row,
+     so it moves to a tooltip and only the swatch and the value are shown. */
+  const bool show_cpu_names = app->config.num_cpus <= 8;
 
   for (i = 0; i < app->config.num_cpus; i++)
     {
-      GtkBox *temp_hbox;
-
-      temp_hbox = GTK_BOX (gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0));
-      gtk_box_set_spacing (temp_hbox, 4);
-      if (i < cols)
-        gtk_grid_insert_column (cpu_table, i % cols);
-      if ((i + 1) % cols == cols)
-        gtk_grid_insert_row (cpu_table, (i + 1) / cols);
-      gtk_grid_attach (cpu_table, GTK_WIDGET (temp_hbox), i / rows, i % rows, 1, 1);
+      entry = legend_entry_new (cpu_legend);
 
       color_picker = gsm_color_button_new (&cpu_graph->colors.at (i), GSMCP_TYPE_CPU);
+      gtk_widget_set_valign (GTK_WIDGET (color_picker), GTK_ALIGN_CENTER);
       g_signal_connect (G_OBJECT (color_picker), "color-set",
                         G_CALLBACK (cb_cpu_color_changed), GINT_TO_POINTER (i));
-      gtk_box_append (temp_hbox, GTK_WIDGET (color_picker));
-      gtk_widget_set_size_request (GTK_WIDGET (color_picker), 32, -1);
+      gtk_box_append (entry, GTK_WIDGET (color_picker));
 
       if (app->config.num_cpus == 1)
         label_text = g_strdup (_("CPU"));
       else
         label_text = g_strdup_printf (_("CPU%d"), i + 1);
       title_text = g_strdup_printf (title_template, label_text);
-      label = GTK_LABEL (gtk_label_new (label_text));
-      if (app->config.num_cpus >= 10)
-        gtk_label_set_width_chars (label, log10 (app->config.num_cpus) + 1 + 4);
       gsm_color_button_set_title (color_picker, title_text);
       g_free (title_text);
-      gtk_box_append (temp_hbox, GTK_WIDGET (label));
+
+      if (show_cpu_names)
+        {
+          label = GTK_LABEL (gtk_label_new (label_text));
+          gtk_widget_set_valign (GTK_WIDGET (label), GTK_ALIGN_CENTER);
+          gtk_box_append (entry, GTK_WIDGET (label));
+        }
+      else
+        {
+          gtk_widget_set_tooltip_text (GTK_WIDGET (entry), label_text);
+        }
       g_free (label_text);
 
       cpu_label = make_tnum_label ();
 
       /* Reserve some space to avoid the layout changing with the values. */
       gtk_label_set_width_chars (cpu_label, 6);
-      gtk_box_append (temp_hbox, GTK_WIDGET (cpu_label));
+      gtk_label_set_xalign (cpu_label, 1.0);
+      gtk_widget_set_valign (GTK_WIDGET (cpu_label), GTK_ALIGN_CENTER);
+      gtk_box_append (entry, GTK_WIDGET (cpu_label));
       load_graph_get_labels (cpu_graph)->cpu[i] = cpu_label;
     }
 
@@ -313,31 +383,31 @@ create_sys_view (GsmApplication *app,
   gtk_box_prepend (mem_graph_box,
                    GTK_WIDGET (load_graph_get_widget (mem_graph)));
 
-  table = GTK_GRID (gtk_builder_get_object (builder, "mem_table"));
+  entry = GTK_BOX (gtk_builder_get_object (builder, "mem_entry"));
 
   color_picker = load_graph_get_mem_color_picker (mem_graph);
+  gtk_widget_set_valign (GTK_WIDGET (color_picker), GTK_ALIGN_CENTER);
   g_signal_connect (G_OBJECT (color_picker), "color-set",
                     G_CALLBACK (cb_mem_color_changed), app);
   title_text = g_strdup_printf (title_template, _("Memory"));
   gsm_color_button_set_title (color_picker, title_text);
   g_free (title_text);
 
-  label = GTK_LABEL (gtk_builder_get_object (builder, "memory_label"));
+  gtk_box_prepend (entry, GTK_WIDGET (color_picker));
+  gtk_box_append (entry, GTK_WIDGET (load_graph_get_labels (mem_graph)->memory));
 
-  gtk_grid_attach_next_to (table, GTK_WIDGET (color_picker), GTK_WIDGET (label), GTK_POS_LEFT, 1, 3);
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (mem_graph)->memory), GTK_WIDGET (label), GTK_POS_BOTTOM, 1, 2);
+  entry = GTK_BOX (gtk_builder_get_object (builder, "swap_entry"));
 
   color_picker = load_graph_get_swap_color_picker (mem_graph);
+  gtk_widget_set_valign (GTK_WIDGET (color_picker), GTK_ALIGN_CENTER);
   g_signal_connect (G_OBJECT (color_picker), "color-set",
                     G_CALLBACK (cb_swap_color_changed), app);
   title_text = g_strdup_printf (title_template, _("Swap"));
   gsm_color_button_set_title (GSM_COLOR_BUTTON (color_picker), title_text);
   g_free (title_text);
 
-  label = GTK_LABEL (gtk_builder_get_object (builder, "swap_label"));
-
-  gtk_grid_attach_next_to (table, GTK_WIDGET (color_picker), GTK_WIDGET (label), GTK_POS_LEFT, 1, 3);
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (mem_graph)->swap), GTK_WIDGET (label), GTK_POS_BOTTOM, 1, 2);
+  gtk_box_prepend (entry, GTK_WIDGET (color_picker));
+  gtk_box_append (entry, GTK_WIDGET (load_graph_get_labels (mem_graph)->swap));
 
   app->mem_graph = mem_graph;
 
@@ -352,10 +422,10 @@ create_sys_view (GsmApplication *app,
   gtk_box_prepend (net_graph_box,
                    GTK_WIDGET (load_graph_get_widget (net_graph)));
 
-  table = GTK_GRID (gtk_builder_get_object (builder, "net_table"));
+  entry = GTK_BOX (gtk_builder_get_object (builder, "net_in_entry"));
 
   color_picker = gsm_color_button_new (
-    &net_graph->colors.at (0), GSMCP_TYPE_NETWORK_IN);
+    &net_graph->colors.at (0), GSMCP_TYPE_CPU);
   gtk_widget_set_valign (GTK_WIDGET (color_picker), GTK_ALIGN_CENTER);
   g_signal_connect (G_OBJECT (color_picker), "color-set",
                     G_CALLBACK (cb_net_in_color_changed), app);
@@ -363,34 +433,30 @@ create_sys_view (GsmApplication *app,
   gsm_color_button_set_title (color_picker, title_text);
   g_free (title_text);
 
-  label = GTK_LABEL (gtk_builder_get_object (builder, "receiving_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (color_picker), GTK_WIDGET (label), GTK_POS_LEFT, 1, 2);
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (net_graph)->net_in), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
-  label = GTK_LABEL (gtk_builder_get_object (builder, "total_received_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (net_graph)->net_in_total), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
+  gtk_box_prepend (entry, GTK_WIDGET (color_picker));
+  gtk_box_insert_child_after (entry,
+                              GTK_WIDGET (load_graph_get_labels (net_graph)->net_in),
+                              GTK_WIDGET (gtk_builder_get_object (builder, "receiving_label")));
+  legend_add_total (builder, load_graph_get_labels (net_graph)->net_in_total,
+                    "net_in_total_box", "total_received_label");
+
+  entry = GTK_BOX (gtk_builder_get_object (builder, "net_out_entry"));
 
   color_picker = gsm_color_button_new (
-    &net_graph->colors.at (1), GSMCP_TYPE_NETWORK_OUT);
+    &net_graph->colors.at (1), GSMCP_TYPE_CPU);
   gtk_widget_set_valign (GTK_WIDGET (color_picker), GTK_ALIGN_CENTER);
-  gtk_widget_set_hexpand (GTK_WIDGET (color_picker), true);
-  gtk_widget_set_halign (GTK_WIDGET (color_picker), GTK_ALIGN_END);
-
   g_signal_connect (G_OBJECT (color_picker), "color-set",
                     G_CALLBACK (cb_net_out_color_changed), app);
   title_text = g_strdup_printf (title_template, _("Sending"));
   gsm_color_button_set_title (color_picker, title_text);
   g_free (title_text);
 
-  label = GTK_LABEL (gtk_builder_get_object (builder, "sending_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (color_picker), GTK_WIDGET (label), GTK_POS_LEFT, 1, 2);
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (net_graph)->net_out), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
-  label = GTK_LABEL (gtk_builder_get_object (builder, "total_sent_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (net_graph)->net_out_total), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
-  gtk_widget_set_hexpand (GTK_WIDGET (load_graph_get_labels (net_graph)->net_out_total), true);
-  gtk_widget_set_halign (GTK_WIDGET (load_graph_get_labels (net_graph)->net_out_total), GTK_ALIGN_START);
-
-  gtk_widget_set_hexpand (GTK_WIDGET (load_graph_get_labels (net_graph)->net_out), true);
-  gtk_widget_set_halign (GTK_WIDGET (load_graph_get_labels (net_graph)->net_out), GTK_ALIGN_START);
+  gtk_box_prepend (entry, GTK_WIDGET (color_picker));
+  gtk_box_insert_child_after (entry,
+                              GTK_WIDGET (load_graph_get_labels (net_graph)->net_out),
+                              GTK_WIDGET (gtk_builder_get_object (builder, "sending_label")));
+  legend_add_total (builder, load_graph_get_labels (net_graph)->net_out_total,
+                    "net_out_total_box", "total_sent_label");
 
   app->net_graph = net_graph;
 
@@ -405,10 +471,10 @@ create_sys_view (GsmApplication *app,
   gtk_box_prepend (disk_graph_box,
                    GTK_WIDGET (load_graph_get_widget (disk_graph)));
 
-  table = GTK_GRID (gtk_builder_get_object (builder, "disk_table"));
+  entry = GTK_BOX (gtk_builder_get_object (builder, "disk_read_entry"));
 
   color_picker = gsm_color_button_new (
-    &disk_graph->colors.at (0), GSMCP_TYPE_DISK_READ);
+    &disk_graph->colors.at (0), GSMCP_TYPE_CPU);
   gtk_widget_set_valign (GTK_WIDGET (color_picker), GTK_ALIGN_CENTER);
   g_signal_connect (G_OBJECT (color_picker), "color-set",
                     G_CALLBACK (cb_disk_read_color_changed), app);
@@ -416,36 +482,38 @@ create_sys_view (GsmApplication *app,
   gsm_color_button_set_title (color_picker, title_text);
   g_free (title_text);
 
-  label = GTK_LABEL (gtk_builder_get_object (builder, "reading_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (color_picker), GTK_WIDGET (label), GTK_POS_LEFT, 1, 2);
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_read), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
-  label = GTK_LABEL (gtk_builder_get_object (builder, "total_read_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_read_total), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
+  gtk_box_prepend (entry, GTK_WIDGET (color_picker));
+  gtk_box_insert_child_after (entry,
+                              GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_read),
+                              GTK_WIDGET (gtk_builder_get_object (builder, "reading_label")));
+  legend_add_total (builder, load_graph_get_labels (disk_graph)->disk_read_total,
+                    "disk_read_total_box", "total_read_label");
+
+  entry = GTK_BOX (gtk_builder_get_object (builder, "disk_write_entry"));
 
   color_picker = gsm_color_button_new (
-    &disk_graph->colors.at (1), GSMCP_TYPE_DISK_WRITE);
+    &disk_graph->colors.at (1), GSMCP_TYPE_CPU);
   gtk_widget_set_valign (GTK_WIDGET (color_picker), GTK_ALIGN_CENTER);
-  gtk_widget_set_hexpand (GTK_WIDGET (color_picker), true);
-  gtk_widget_set_halign (GTK_WIDGET (color_picker), GTK_ALIGN_END);
-
   g_signal_connect (G_OBJECT (color_picker), "color-set",
                     G_CALLBACK (cb_disk_write_color_changed), app);
   title_text = g_strdup_printf (title_template, _("Writing"));
   gsm_color_button_set_title (color_picker, title_text);
   g_free (title_text);
 
-  label = GTK_LABEL (gtk_builder_get_object (builder, "writing_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (color_picker), GTK_WIDGET (label), GTK_POS_LEFT, 1, 2);
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_write), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
-  label = GTK_LABEL (gtk_builder_get_object (builder, "total_written_label"));
-  gtk_grid_attach_next_to (table, GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_write_total), GTK_WIDGET (label), GTK_POS_RIGHT, 1, 1);
-  gtk_widget_set_hexpand (GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_write_total), true);
-  gtk_widget_set_halign (GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_write_total), GTK_ALIGN_START);
-
-  gtk_widget_set_hexpand (GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_write), true);
-  gtk_widget_set_halign (GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_write), GTK_ALIGN_START);
+  gtk_box_prepend (entry, GTK_WIDGET (color_picker));
+  gtk_box_insert_child_after (entry,
+                              GTK_WIDGET (load_graph_get_labels (disk_graph)->disk_write),
+                              GTK_WIDGET (gtk_builder_get_object (builder, "writing_label")));
+  legend_add_total (builder, load_graph_get_labels (disk_graph)->disk_write_total,
+                    "disk_write_total_box", "total_written_label");
 
   app->disk_graph = disk_graph;
+
+  legend_forward_scroll (builder, "cpu_legend_scroller");
+  legend_forward_scroll (builder, "mem_legend_scroller");
+  legend_forward_scroll (builder, "net_legend_scroller");
+  legend_forward_scroll (builder, "disk_legend_scroller");
+
   g_free (title_template);
 }
 
