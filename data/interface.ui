@@ -2,6 +2,17 @@
 <interface>
   <requires lib="gtk" version="4.0"/>
   <requires lib="libadwaita" version="1.4"/>
+  <!-- Give every section title the width of the longest one, so the legends
+       on the title rows all start in the same column. -->
+  <object class="GtkSizeGroup" id="title_size_group">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="cpu_title"/>
+      <widget name="mem_title"/>
+      <widget name="net_title"/>
+      <widget name="disk_title"/>
+    </widgets>
+  </object>
   <object class="AdwApplicationWindow" id="main_window">
     <property name="title" translatable="yes">System Monitor</property>
     <property name="icon-name">org.gnome.SystemMonitor</property>
@@ -20,6 +31,7 @@
     <child>
       <object class="AdwBreakpoint">
         <condition>max-width: 820sp</condition>
+          <setter object="title_size_group" property="mode">none</setter>
           <setter object="net_in_total_box" property="visible">False</setter>
           <setter object="net_out_total_box" property="visible">False</setter>
           <setter object="disk_read_total_box" property="visible">False</setter>
@@ -188,13 +200,18 @@
                                 <property name="spacing">12</property>
                                 <property name="hexpand">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="cpu_label">
-                                    <property name="halign">start</property>
+                                  <object class="GtkBox" id="cpu_title">
                                     <property name="valign">center</property>
-                                    <property name="label" translatable="yes">CPU</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <child>
+                                    <object class="GtkLabel" id="cpu_label">
+                                      <property name="halign">start</property>
+                                      <property name="valign">center</property>
+                                      <property name="label" translatable="yes">CPU</property>
+                                      <attributes>
+                                        <attribute name="weight" value="bold"/>
+                                      </attributes>
+                                    </object>
+                                    </child>
                                   </object>
                                 </child>
                                 <child>
@@ -209,7 +226,7 @@
                                       <object class="GtkBox" id="cpu_legend">
                                         <property name="orientation">horizontal</property>
                                         <property name="spacing">14</property>
-                                        <property name="halign">end</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                       </object>
                                     </property>
@@ -237,13 +254,18 @@
                                 <property name="spacing">12</property>
                                 <property name="hexpand">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="mem_label">
-                                    <property name="halign">start</property>
+                                  <object class="GtkBox" id="mem_title">
                                     <property name="valign">center</property>
-                                    <property name="label" translatable="yes">Memory and Swap</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <child>
+                                    <object class="GtkLabel" id="mem_label">
+                                      <property name="halign">start</property>
+                                      <property name="valign">center</property>
+                                      <property name="label" translatable="yes">Memory and Swap</property>
+                                      <attributes>
+                                        <attribute name="weight" value="bold"/>
+                                      </attributes>
+                                    </object>
+                                    </child>
                                   </object>
                                 </child>
                                 <child>
@@ -258,7 +280,7 @@
                                       <object class="GtkBox" id="mem_legend">
                                         <property name="orientation">horizontal</property>
                                         <property name="spacing">14</property>
-                                        <property name="halign">end</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkBox" id="mem_entry">
@@ -310,13 +332,18 @@
                                 <property name="spacing">12</property>
                                 <property name="hexpand">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="net_label">
-                                    <property name="halign">start</property>
+                                  <object class="GtkBox" id="net_title">
                                     <property name="valign">center</property>
-                                    <property name="label" translatable="yes">Network</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <child>
+                                    <object class="GtkLabel" id="net_label">
+                                      <property name="halign">start</property>
+                                      <property name="valign">center</property>
+                                      <property name="label" translatable="yes">Network</property>
+                                      <attributes>
+                                        <attribute name="weight" value="bold"/>
+                                      </attributes>
+                                    </object>
+                                    </child>
                                   </object>
                                 </child>
                                 <child>
@@ -331,7 +358,7 @@
                                       <object class="GtkBox" id="net_legend">
                                         <property name="orientation">horizontal</property>
                                         <property name="spacing">14</property>
-                                        <property name="halign">end</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkBox" id="net_in_entry">
@@ -407,13 +434,18 @@
                                 <property name="spacing">12</property>
                                 <property name="hexpand">True</property>
                                 <child>
-                                  <object class="GtkLabel" id="disk_label">
-                                    <property name="halign">start</property>
+                                  <object class="GtkBox" id="disk_title">
                                     <property name="valign">center</property>
-                                    <property name="label" translatable="yes">Disk</property>
-                                    <attributes>
-                                      <attribute name="weight" value="bold"/>
-                                    </attributes>
+                                    <child>
+                                    <object class="GtkLabel" id="disk_label">
+                                      <property name="halign">start</property>
+                                      <property name="valign">center</property>
+                                      <property name="label" translatable="yes">Disk</property>
+                                      <attributes>
+                                        <attribute name="weight" value="bold"/>
+                                      </attributes>
+                                    </object>
+                                    </child>
                                   </object>
                                 </child>
                                 <child>
@@ -428,7 +460,7 @@
                                       <object class="GtkBox" id="disk_legend">
                                         <property name="orientation">horizontal</property>
                                         <property name="spacing">14</property>
-                                        <property name="halign">end</property>
+                                        <property name="halign">start</property>
                                         <property name="valign">center</property>
                                         <child>
                                           <object class="GtkBox" id="disk_read_entry">
