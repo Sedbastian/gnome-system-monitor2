@@ -44,12 +44,43 @@
 #include "settings-keys.h"
 #include "legacy/gsm_color_button.h"
 
+/* Besides the graph background, this trims the header bar, its buttons and the
+   section title rows down to the height of the text and icons they hold: every
+   pixel of chrome above the Resources page is a pixel its graphs do not get. */
 static const char*LOAD_GRAPH_CSS = "\
 .loadgraph {\
     background: linear-gradient(to bottom,\
                   @window_bg_color,\
                   @view_bg_color);\
     color: @window_fg_color;\
+}\
+headerbar.compact-header,\
+headerbar.compact-header > windowhandle,\
+headerbar.compact-header > windowhandle > box {\
+    min-height: 0;\
+    margin-top: 0;\
+    margin-bottom: 0;\
+    padding-top: 0;\
+    padding-bottom: 0;\
+}\
+headerbar.compact-header button,\
+headerbar.compact-header viewswitcher button,\
+headerbar.compact-header windowcontrols button {\
+    min-height: 0;\
+    padding-top: 1px;\
+    padding-bottom: 1px;\
+}\
+headerbar.compact-header viewswitcher button box,\
+headerbar.compact-header viewswitcher button image,\
+headerbar.compact-header viewswitcher button label {\
+    min-height: 0;\
+    margin-top: 0;\
+    margin-bottom: 0;\
+}\
+expander-widget > box > title {\
+    min-height: 0;\
+    padding-top: 0;\
+    padding-bottom: 0;\
 }\
 ";
 
@@ -508,6 +539,11 @@ create_sys_view (GsmApplication *app,
                     "disk_write_total_box", "total_written_label");
 
   app->disk_graph = disk_graph;
+
+  /* One x axis for the whole page, under the last graph. Any of the four
+     graphs would do to take the geometry from; they are all the same. */
+  gtk_box_append (GTK_BOX (gtk_builder_get_object (builder, "res_box")),
+                  load_graph_create_time_axis (cpu_graph));
 
   legend_forward_scroll (builder, "cpu_legend_scroller");
   legend_forward_scroll (builder, "mem_legend_scroller");

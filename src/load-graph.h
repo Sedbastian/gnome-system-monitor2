@@ -69,6 +69,8 @@ struct LoadGraph
 
   GtkBox *main_widget;
   GsmGraph *disp;
+  /* The x axis shared by every graph on the page, if this graph draws it */
+  GtkWidget *time_axis;
 
   LoadGraphLabels labels;
   GsmColorButton *mem_color_picker;
@@ -135,6 +137,10 @@ load_graph_get_labels (LoadGraph *g) G_GNUC_CONST;
 
 GtkBox*
 load_graph_get_widget (LoadGraph *g) G_GNUC_CONST;
+
+/* Create the x axis shared by every graph on the page, drawn to g's grid. */
+GtkWidget*
+load_graph_create_time_axis (LoadGraph *g);
 
 GsmColorButton*
 load_graph_get_mem_color_picker (LoadGraph *g) G_GNUC_CONST;

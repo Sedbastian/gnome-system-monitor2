@@ -19,7 +19,8 @@
 
 constexpr double BORDER_ALPHA = 0.7;
 constexpr double GRID_ALPHA = BORDER_ALPHA / 2.0;
-constexpr int FRAME_WIDTH = 4;
+/* Breathing room around the grid, top and bottom of every graph */
+constexpr int FRAME_WIDTH = 1;
 constexpr unsigned GRAPH_MIN_HEIGHT = 40;
 
 void
@@ -92,6 +93,9 @@ LoadGraph::translate_to_log_partial_if_needed (float position_partial)
   return position_partial;
 }
 
+/* Number of vertical grid lines, and so of captions on the time axis. */
+static const guint TIME_AXIS_SECTIONS = 7;
+
 static gchar*
 format_duration (unsigned seconds)
 {
@@ -140,11 +144,16 @@ format_duration (unsigned seconds)
   return caption;
 }
 
+static int time_axis_height (LoadGraph *graph);
+
 static void
 load_graph_rescale (LoadGraph *graph)
 {
   ///org/gnome/desktop/interface/text-scaling-factor
   gsm_graph_set_font_size (GSM_GRAPH (graph->disp), 8 * graph->font_settings->get_double ("text-scaling-factor"));
+
+  if (graph->time_axis != NULL)
+    gtk_widget_set_size_request (graph->time_axis, -1, time_axis_height (graph));
 }
 
 static cairo_surface_t*
@@ -160,16 +169,12 @@ create_background (LoadGraph *graph,
   PangoLayout *layout;
   cairo_t *cr;
   cairo_surface_t *surface;
-  guint frames_per_unit = gsm_graph_get_frames_per_unit (graph->disp);
   double fontsize = gsm_graph_get_font_size (graph->disp);
   double rmargin = gsm_graph_get_right_margin (graph->disp);
   guint num_bars = gsm_graph_get_num_bars (graph->disp, height);
-  const guint num_sections = 7;
+  const guint num_sections = TIME_AXIS_SECTIONS;
 
   guint indent = gsm_graph_get_indent (graph->disp);
-
-  /* Graph length */
-  const unsigned total_seconds = graph->speed * (graph->num_points - 2) / 1000 * frames_per_unit;
 
   gtk_widget_get_allocation (GTK_WIDGET (graph->disp), &allocation);
   surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
@@ -279,37 +284,13 @@ create_background (LoadGraph *graph,
                      i * graph->graph_dely);
     }
 
-  /* Vertical grid lines */
+  /* Vertical grid lines. The durations they stand for are written once, at
+     the bottom of the page, by the shared time axis -- not under every
+     graph, where the same seven captions were repeated four times over. */
   for (unsigned int i = 0; i < num_sections; i++)
     {
-      PangoRectangle extents;
-
       /* Prepare the x position */
       double x = ceil (i * (width - rmargin - indent) / (num_sections - 1));
-
-      /* Draw the label */
-      /* Prepare the text */
-      gchar *caption = format_duration (total_seconds - i * total_seconds / (num_sections - 1));
-      pango_layout_set_text (layout, caption, -1);
-      pango_layout_get_extents (layout, NULL, &extents);
-
-      /* Create x axis position modifier */
-      double label_x_offset_modifier = i == 0 ? 0
-                                         : i == (num_sections - 1)
-                                            ? 1.0
-                                            : 0.5;
-
-      /* Set the label position */
-      cairo_move_to (cr,
-                     x + indent - label_x_offset_modifier * extents.width / PANGO_SCALE + 1.0,
-                     height - 1.0 * extents.height / PANGO_SCALE);
-
-      /* Set the color */
-      gdk_cairo_set_source_rgba (cr, &fg_color);
-
-      /* Paint the grid label */
-      pango_cairo_show_layout (cr, layout);
-      g_free (caption);
 
       /* Set the grid line alpha */
       if (i == 0 || i == (num_sections - 1))
@@ -335,6 +316,122 @@ create_background (LoadGraph *graph,
   return surface;
 }
 
+/* Every graph on the Resources page shares one x axis: they all run at the
+   same speed, over the same number of points, at the same width. Drawing the
+   durations under each of them repeated the same seven captions four times
+   over, so they are drawn once, here, below the last graph. */
+
+static int
+time_axis_height (LoadGraph *graph)
+{
+  PangoContext *pango_context;
+  PangoFontDescription *font_desc;
+  PangoLayout *layout;
+  int height;
+
+  pango_context = gtk_widget_get_pango_context (GTK_WIDGET (graph->time_axis));
+  font_desc = pango_font_description_copy (pango_context_get_font_description (pango_context));
+  pango_font_description_set_size (font_desc,
+                                   0.8 * gsm_graph_get_font_size (graph->disp) * PANGO_SCALE);
+
+  layout = pango_layout_new (pango_context);
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_set_text (layout, "0", -1);
+  pango_layout_get_pixel_size (layout, NULL, &height);
+
+  g_object_unref (layout);
+  pango_font_description_free (font_desc);
+
+  return height;
+}
+
+static void
+time_axis_draw (GtkDrawingArea *area,
+                cairo_t        *cr,
+                int             width,
+                int             height,
+                gpointer        data_ptr)
+{
+  LoadGraph * const graph = static_cast<LoadGraph*>(data_ptr);
+  GtkWidget *self = GTK_WIDGET (area);
+  GdkRGBA fg_color;
+  PangoContext *pango_context;
+  PangoFontDescription *font_desc;
+  PangoLayout *layout;
+  guint frames_per_unit = gsm_graph_get_frames_per_unit (graph->disp);
+  double rmargin = gsm_graph_get_right_margin (graph->disp);
+  guint indent = gsm_graph_get_indent (graph->disp);
+  /* Read the speed and the point count back off the graph: LoadGraph::speed
+     keeps its initial value when the update interval is changed. */
+  guint speed = gsm_graph_get_speed (graph->disp);
+  guint num_points = gsm_graph_get_num_points (graph->disp);
+  const unsigned total_seconds = speed * (num_points - 2) / 1000 * frames_per_unit;
+
+  /* The graphs are siblings of this widget in the same vertical box, so they
+     span exactly the same columns; the grid lines are where create_background ()
+     puts them, on a width that excludes the frame it draws inside. */
+  double graph_width = width - 2 * FRAME_WIDTH;
+
+  if (graph_width <= rmargin + indent)
+    return;
+
+  pango_context = gtk_widget_get_pango_context (self);
+  font_desc = pango_font_description_copy (pango_context_get_font_description (pango_context));
+  pango_font_description_set_size (font_desc,
+                                   0.8 * gsm_graph_get_font_size (graph->disp) * PANGO_SCALE);
+
+  layout = pango_layout_new (pango_context);
+  pango_layout_set_font_description (layout, font_desc);
+
+  gtk_widget_get_color (self, &fg_color);
+  gdk_cairo_set_source_rgba (cr, &fg_color);
+
+  for (guint i = 0; i < TIME_AXIS_SECTIONS; i++)
+    {
+      PangoRectangle extents;
+
+      double x = ceil (i * (graph_width - rmargin - indent) / (TIME_AXIS_SECTIONS - 1));
+
+      gchar *caption = format_duration (total_seconds
+                                        - i * total_seconds / (TIME_AXIS_SECTIONS - 1));
+
+      pango_layout_set_text (layout, caption, -1);
+      pango_layout_get_extents (layout, NULL, &extents);
+
+      /* The first caption hangs off the line to the right, the last one to the
+         left, so that neither runs past the end of the grid. */
+      double label_x_offset_modifier = i == 0 ? 0
+                                       : i == (TIME_AXIS_SECTIONS - 1)
+                                         ? 1.0
+                                         : 0.5;
+
+      cairo_move_to (cr,
+                     FRAME_WIDTH + x + indent
+                     - label_x_offset_modifier * extents.width / PANGO_SCALE + 1.0,
+                     height - extents.height / PANGO_SCALE);
+
+      pango_cairo_show_layout (cr, layout);
+      g_free (caption);
+    }
+
+  g_object_unref (layout);
+  pango_font_description_free (font_desc);
+}
+
+GtkWidget *
+load_graph_create_time_axis (LoadGraph *graph)
+{
+  GtkWidget *area = gtk_drawing_area_new ();
+
+  graph->time_axis = area;
+
+  gtk_widget_set_hexpand (area, TRUE);
+  gtk_widget_set_size_request (area, -1, time_axis_height (graph));
+  gtk_drawing_area_set_draw_func (GTK_DRAWING_AREA (area), time_axis_draw, graph, NULL);
+
+  return area;
+}
+
 static void
 load_graph_draw (GtkDrawingArea* area,
                  cairo_t *cr,
@@ -355,7 +452,9 @@ load_graph_draw (GtkDrawingArea* area,
   width -= 2 * FRAME_WIDTH;
   height -= 2 * FRAME_WIDTH;
 
-  graph->graph_dely = (height - 15) / graph->num_bars;   /* round to int to avoid AA blur */
+  /* The x axis captions used to live in a 15px strip below the grid; they are
+     drawn once for the whole page now, so the grid gets that height back. */
+  graph->graph_dely = height / graph->num_bars;   /* round to int to avoid AA blur */
   graph->real_draw_height = graph->graph_dely * graph->num_bars;
 
   /* Number of pixels wide for one sample point */
@@ -940,6 +1039,11 @@ load_graph_destroy (GtkWidget*,
 {
   LoadGraph * const graph = static_cast<LoadGraph*>(data_ptr);
 
+  /* The time axis outlives its reference graph in teardown, and its draw
+     function reads through this pointer. */
+  if (graph->time_axis != NULL)
+    gtk_drawing_area_set_draw_func (GTK_DRAWING_AREA (graph->time_axis), NULL, NULL, NULL);
+
   delete graph;
 }
 
@@ -959,6 +1063,7 @@ LoadGraph::LoadGraph(guint type)
   data (),
   main_widget (NULL),
   disp (NULL),
+  time_axis (NULL),
   labels (),
   mem_color_picker (NULL),
   swap_color_picker (NULL),
@@ -1094,6 +1199,10 @@ load_graph_change_speed (LoadGraph *graph,
                          guint      new_speed)
 {
   gsm_graph_set_speed (GSM_GRAPH (graph->disp), new_speed);
+
+  /* The shared time axis spells out the length of the graph, which just moved */
+  if (graph->time_axis != NULL)
+    gtk_widget_queue_draw (graph->time_axis);
 }
 
 void
@@ -1131,6 +1240,9 @@ load_graph_change_num_points (LoadGraph *graph,
 
   // Force the scale to be redrawn.
   graph->clear_background ();
+
+  if (graph->time_axis != NULL)
+    gtk_widget_queue_draw (graph->time_axis);
 }
 
 LoadGraphLabels*

@@ -50,6 +50,9 @@
         <property name="height-request">480</property>
         <child type="top">
           <object class="AdwHeaderBar" id="header_bar">
+            <style>
+              <class name="compact-header"/>
+            </style>
             <child type="title">
               <object class="AdwViewSwitcher" id="view_switcher">
                 <property name="policy">ADW_VIEW_SWITCHER_POLICY_WIDE</property>
@@ -176,12 +179,12 @@
                       <object class="GtkBox" id="res_box">
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
-                        <property name="margin-top">6</property>
-                        <property name="margin-bottom">12</property>
+                        <property name="margin-top">1</property>
+                        <property name="margin-bottom">1</property>
                         <property name="margin-start">18</property>
                         <property name="margin-end">18</property>
                         <property name="orientation">vertical</property>
-                        <property name="spacing">6</property>
+                        <property name="spacing">1</property>
                         <child>
                           <object class="GtkExpander" id="cpu_expander">
                             <property name="vexpand">True</property>
@@ -191,7 +194,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">4</property>
+                                <property name="margin-top">1</property>
                               </object>
                             </child>
                             <child type="label">
@@ -245,7 +248,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">4</property>
+                                <property name="margin-top">1</property>
                               </object>
                             </child>
                             <child type="label">
@@ -323,7 +326,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">4</property>
+                                <property name="margin-top">1</property>
                               </object>
                             </child>
                             <child type="label">
@@ -425,7 +428,7 @@
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="orientation">vertical</property>
-                                <property name="margin-top">4</property>
+                                <property name="margin-top">1</property>
                               </object>
                             </child>
                             <child type="label">
