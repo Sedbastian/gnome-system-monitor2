@@ -36,6 +36,8 @@ struct ProcConfig
     graph_update_interval (0),
     disks_update_interval (0),
     graph_data_points (0),
+    graph_history_points (0),
+    graph_keep_all_history (false),
     mem_color (),
     swap_color (),
     net_in_color (),
@@ -62,6 +64,8 @@ struct ProcConfig
   int graph_update_interval;
   int disks_update_interval;
   int graph_data_points;
+  int graph_history_points;
+  bool graph_keep_all_history;
   GdkRGBA cpu_color[GLIBTOP_NCPU];
   GdkRGBA mem_color;
   GdkRGBA swap_color;

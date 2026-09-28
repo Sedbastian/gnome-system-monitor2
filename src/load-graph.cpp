@@ -93,6 +93,25 @@ LoadGraph::translate_to_log_partial_if_needed (float position_partial)
   return position_partial;
 }
 
+/*
+ How many samples back from the newest one the right edge of the graph is.
+ Each graph counts from its own samples, not the reference graph's: their
+ timers tick at slightly different moments, and a shared count would make
+ every graph but one jump back and forth by a sample on every tick.
+*/
+guint
+LoadGraph::scroll_back () const
+{
+  if (this->history == NULL || this->history->live)
+    return 0;
+
+  guint visible = gsm_graph_get_num_points (this->disp);
+  guint max_back = this->num_points > visible ? this->num_points - visible : 0;
+  guint64 back = this->samples > this->history->anchor ? this->samples - this->history->anchor : 0;
+
+  return MIN (back, max_back);
+}
+
 /* Number of vertical grid lines, and so of captions on the time axis. */
 static const guint TIME_AXIS_SECTIONS = 7;
 
@@ -145,6 +164,8 @@ format_duration (unsigned seconds)
 }
 
 static int time_axis_height (LoadGraph *graph);
+static void history_set_margins (LoadGraphHistory *history);
+static void rescale_net_or_disk (LoadGraph *graph);
 
 static void
 load_graph_rescale (LoadGraph *graph)
@@ -154,6 +175,10 @@ load_graph_rescale (LoadGraph *graph)
 
   if (graph->time_axis != NULL)
     gtk_widget_set_size_request (graph->time_axis, -1, time_axis_height (graph));
+
+  /* The right margin of the graphs follows the font size */
+  if (graph->history != NULL && graph->history->reference == graph)
+    history_set_margins (graph->history);
 }
 
 static cairo_surface_t*
@@ -365,7 +390,11 @@ time_axis_draw (GtkDrawingArea *area,
      keeps its initial value when the update interval is changed. */
   guint speed = gsm_graph_get_speed (graph->disp);
   guint num_points = gsm_graph_get_num_points (graph->disp);
-  const unsigned total_seconds = speed * (num_points - 2) / 1000 * frames_per_unit;
+  /* Multiply before dividing: at short intervals speed * points / 1000 on its
+     own truncates, and 15 seconds of graph read as 10. */
+  const unsigned total_seconds = speed * frames_per_unit * (num_points - 2) / 1000;
+  /* How long ago the right edge is, when scrolled back through the history */
+  const unsigned back_seconds = speed * frames_per_unit * graph->scroll_back () / 1000;
 
   /* The graphs are siblings of this widget in the same vertical box, so they
      span exactly the same columns; the grid lines are where create_background ()
@@ -392,7 +421,7 @@ time_axis_draw (GtkDrawingArea *area,
 
       double x = ceil (i * (graph_width - rmargin - indent) / (TIME_AXIS_SECTIONS - 1));
 
-      gchar *caption = format_duration (total_seconds
+      gchar *caption = format_duration (back_seconds + total_seconds
                                         - i * total_seconds / (TIME_AXIS_SECTIONS - 1));
 
       pango_layout_set_text (layout, caption, -1);
@@ -432,6 +461,134 @@ load_graph_create_time_axis (LoadGraph *graph)
   return area;
 }
 
+/* The history scrollbar counts in samples of the reference graph. Its page
+   is the samples on screen; its range, the samples kept so far, so that it
+   never scrolls to where there is no data yet.
+   The value is the left edge of the page, counted from the oldest sample. */
+
+static void
+history_set_margins (LoadGraphHistory *history)
+{
+  GsmGraph *disp = history->reference->disp;
+
+  /* Span the plotted area only, like the time axis captions */
+  gtk_widget_set_margin_start (history->scrollbar,
+                               FRAME_WIDTH + gsm_graph_get_indent (disp));
+  gtk_widget_set_margin_end (history->scrollbar,
+                             FRAME_WIDTH + (int) ceil (gsm_graph_get_right_margin (disp)));
+}
+
+/* Move the scrollbar along with the data: keep it at the right end when live,
+   and on the same sample otherwise. */
+static void
+history_sync (LoadGraphHistory *history)
+{
+  LoadGraph *reference = history->reference;
+  const guint visible = gsm_graph_get_num_points (reference->disp);
+  const double page = visible - 2;
+  const double upper = MAX (double (MIN (reference->filled, reference->num_points - 2)), page);
+  double value = upper - page;
+
+  if (!history->live)
+    {
+      const guint64 back = reference->samples > history->anchor
+                           ? reference->samples - history->anchor
+                           : 0;
+
+      value -= back;
+      if (value < 0)
+        {
+          /* The samples that were on screen are gone from the history:
+             stay on the oldest ones left. */
+          value = 0;
+          history->anchor = reference->samples - guint64 (upper - page);
+        }
+    }
+
+  history->updating = true;
+  gtk_adjustment_configure (history->adj, value, 0, upper, 1, page, page);
+  history->updating = false;
+
+  gtk_widget_set_visible (history->scrollbar,
+                          reference->num_points > visible
+                          || GsmApplication::get ()->config.graph_keep_all_history);
+
+  /* When live, the time axis stays the same; when not, the right edge just
+     got one sample older. The value does not always change with it: not
+     while the history is still filling up. */
+  if (!history->live && reference->time_axis != NULL)
+    gtk_widget_queue_draw (reference->time_axis);
+}
+
+static void
+history_value_changed (GtkAdjustment    *adj,
+                       LoadGraphHistory *history)
+{
+  /* Only follow the user; history_sync () takes care of the rest */
+  if (history->updating || history->reference == NULL)
+    return;
+
+  const double top = gtk_adjustment_get_upper (adj) - gtk_adjustment_get_page_size (adj);
+  const guint64 back = llround (top - gtk_adjustment_get_value (adj));
+
+  history->live = back == 0;
+  history->anchor = history->reference->samples - back;
+
+  for (LoadGraph *graph : history->graphs)
+    {
+      rescale_net_or_disk (graph);
+      gtk_widget_queue_draw (GTK_WIDGET (graph->disp));
+    }
+
+  if (history->reference->time_axis != NULL)
+    gtk_widget_queue_draw (history->reference->time_axis);
+}
+
+static void
+history_free (GtkWidget*,
+              gpointer data_ptr)
+{
+  LoadGraphHistory * const history = static_cast<LoadGraphHistory*>(data_ptr);
+
+  for (LoadGraph *graph : history->graphs)
+    graph->history = NULL;
+
+  g_signal_handlers_disconnect_by_data (history->adj, history);
+  g_object_unref (history->adj);
+
+  delete history;
+}
+
+GtkWidget *
+load_graph_create_history_scrollbar (LoadGraph                     *reference,
+                                     const std::vector<LoadGraph*> &graphs)
+{
+  LoadGraphHistory *history = new LoadGraphHistory ();
+
+  history->adj = GTK_ADJUSTMENT (g_object_ref_sink (gtk_adjustment_new (0, 0, 0, 1, 0, 0)));
+  history->scrollbar = gtk_scrollbar_new (GTK_ORIENTATION_HORIZONTAL, history->adj);
+  history->graphs = graphs;
+  history->reference = reference;
+  history->live = true;
+  history->anchor = 0;
+  history->updating = false;
+
+  for (LoadGraph *graph : graphs)
+    graph->history = history;
+
+  gtk_widget_set_hexpand (history->scrollbar, TRUE);
+  history_set_margins (history);
+
+  g_signal_connect (history->adj, "value-changed",
+                    G_CALLBACK (history_value_changed), history);
+  g_signal_connect (history->scrollbar, "destroy",
+                    G_CALLBACK (history_free), history);
+
+  history_sync (history);
+
+  return history->scrollbar;
+}
+
 static void
 load_graph_draw (GtkDrawingArea* area,
                  cairo_t *cr,
@@ -446,6 +603,8 @@ load_graph_draw (GtkDrawingArea* area,
   double rmargin = gsm_graph_get_right_margin (GSM_GRAPH (area));
   guint num_points = gsm_graph_get_num_points (GSM_GRAPH (area));
   guint indent = gsm_graph_get_indent (GSM_GRAPH (area));
+  /* The newest sample drawn: data[back] */
+  guint back = graph->scroll_back ();
   graph->num_bars = gsm_graph_get_num_bars (GSM_GRAPH (area), height);
 
   /* Initialize graph dimensions */
@@ -458,7 +617,7 @@ load_graph_draw (GtkDrawingArea* area,
   graph->real_draw_height = graph->graph_dely * graph->num_bars;
 
   /* Number of pixels wide for one sample point */
-  const double x_step = double(width - rmargin - graph->indent) / (graph->num_points - 2);
+  const double x_step = double(width - rmargin - graph->indent) / (num_points - 2);
 
   /* Lines start at the right edge of the drawing,
    * a bit outside the clip rectangle. */
@@ -466,8 +625,10 @@ load_graph_draw (GtkDrawingArea* area,
   double x_offset = width - rmargin + FRAME_WIDTH;
 
   /* Shift the x position of the most recent (shown rightmost) value outside of the clip area in order
-     to be able to simulate continuous, smooth movement without the line being cut off at its ends */
-  x_offset += x_step * (1 - render_counter / double(frames_per_unit));
+     to be able to simulate continuous, smooth movement without the line being cut off at its ends.
+     Scrolled back into the history, the graph holds still, with data[back] on the right edge. */
+  if (back == 0)
+    x_offset += x_step * (1 - render_counter / double(frames_per_unit));
 
   /* Draw background */
   if (!gsm_graph_is_background_set (GSM_GRAPH (graph->disp))) {
@@ -508,27 +669,30 @@ load_graph_draw (GtkDrawingArea* area,
       gdk_cairo_set_source_rgba (cr, &(graph->colors [j]));
 
       /* Start drawing on the right at the correct height */
-      cairo_move_to (cr, x_offset, y_base + (1.0f - graph->data[0][j]) * graph->real_draw_height);
+      cairo_move_to (cr, x_offset, y_base + (1.0f - graph->data[back][j]) * graph->real_draw_height);
 
       /* Draw the path of the line
          Loop starts at 1 because the curve accesses the 0th data point */
       for (guint i = 1; i < num_points; i++)
         {
-          if (graph->data[i][j] == -1.0f)
+          const double *sample = graph->data[back + i];
+          const double *next_sample = graph->data[back + i - 1];
+
+          if (sample[j] == -1.0f)
             continue;
 
           if (drawSmooth)
             cairo_curve_to (cr,
                             x_offset - ((i - 0.5f) * x_step),
-                            y_base + (1.0 - graph->data[i - 1][j]) * graph->real_draw_height,
+                            y_base + (1.0 - next_sample[j]) * graph->real_draw_height,
                             x_offset - ((i - 0.5f) * x_step),
-                            y_base + (1.0 - graph->data[i][j]) * graph->real_draw_height,
+                            y_base + (1.0 - sample[j]) * graph->real_draw_height,
                             x_offset - (i * x_step),
-                            y_base + (1.0 - graph->data[i][j]) * graph->real_draw_height);
+                            y_base + (1.0 - sample[j]) * graph->real_draw_height);
           else
             cairo_line_to (cr,
                            x_offset - (i * x_step),
-                           y_base + (1.0 - graph->data[i][j]) * graph->real_draw_height);
+                           y_base + (1.0 - sample[j]) * graph->real_draw_height);
         }
 
       if (drawStacked)
@@ -555,6 +719,7 @@ void
 load_graph_reset (LoadGraph *graph)
 {
   std::fill (graph->data_block.begin (), graph->data_block.end (), -1.0);
+  graph->filled = 0;
 }
 
 static void
@@ -738,31 +903,32 @@ nicenum (double x,
   return nf * pow (10.0, expv);
 }
 
-static void
-dynamic_scale (LoadGraph             *graph,
-               std::vector<unsigned> *values,
-               guint64               *max,
-               guint64                din,
-               guint64                dout,
-               gboolean               in_bits)
+/* values is a ring buffer, the newest sample at latest - 1; this is the one
+   `back` samples before that. */
+static unsigned &
+value_at (LoadGraph             *graph,
+          std::vector<unsigned> *values,
+          guint                  back)
 {
-  graph->data[0][0] = 1.0f * din / *max;
-  graph->data[0][1] = 1.0f * dout / *max;
+  const guint n = graph->num_points;
 
-  guint64 dmax = std::max (din, dout);
+  return values->at ((graph->latest + n - 1 - back % n) % n);
+}
 
-  if (graph->latest == 0)
-    values->at (graph->num_points - 1) = dmax;
-  else
-    values->at (graph->latest - 1) = dmax;
+/* Fit the scale to the samples on screen, rather than to the whole history:
+   a spike an hour ago must not flatten the graph of the last minute. */
+static void
+rescale_to_window (LoadGraph             *graph,
+                   std::vector<unsigned> *values,
+                   guint64               *max,
+                   gboolean               in_bits)
+{
+  const guint back = graph->scroll_back ();
+  const guint visible = gsm_graph_get_num_points (graph->disp);
 
-  guint64 new_max;
-  // both way, new_max is the greatest value
-  if (dmax >= *max)
-    new_max = dmax;
-  else
-    new_max = *std::max_element (&values->at (0),
-                                 &values->at (graph->num_points - 1));
+  guint64 new_max = 0;
+  for (guint i = back; i < back + visible && i < graph->num_points; i++)
+    new_max = std::max (new_max, guint64 (value_at (graph, values, i)));
 
   //
   // Round maximum
@@ -825,7 +991,7 @@ dynamic_scale (LoadGraph             *graph,
 
   // if max is the same or has decreased but not so much, don't
   // do anything to avoid rescaling
-  if ((0.8 * graph->net.max) < new_max && new_max <= graph->net.max)
+  if ((0.8 * *max) < new_max && new_max <= *max)
     return;
 
   const double scale = 1.0f * *max / new_max;
@@ -837,15 +1003,41 @@ dynamic_scale (LoadGraph             *graph,
         graph->data[i][1] *= scale;
       }
 
-  procman_debug ("rescale dmax = %" G_GUINT64_FORMAT
-                 " max = %" G_GUINT64_FORMAT
+  procman_debug ("rescale max = %" G_GUINT64_FORMAT
                  " new_max = %" G_GUINT64_FORMAT,
-                 dmax, *max, new_max);
+                 *max, new_max);
 
   *max = new_max;
 
   // force the graph background to be redrawn now that scale has changed
   graph->clear_background ();
+}
+
+static void
+dynamic_scale (LoadGraph             *graph,
+               std::vector<unsigned> *values,
+               guint64               *max,
+               guint64                din,
+               guint64                dout,
+               gboolean               in_bits)
+{
+  graph->data[0][0] = 1.0f * din / *max;
+  graph->data[0][1] = 1.0f * dout / *max;
+
+  value_at (graph, values, 0) = std::max (din, dout);
+
+  rescale_to_window (graph, values, max, in_bits);
+}
+
+/* The history scrollbar moved: net and disk rescale to what is now on screen. */
+static void
+rescale_net_or_disk (LoadGraph *graph)
+{
+  if (graph->type == LOAD_GRAPH_NET)
+    rescale_to_window (graph, &graph->net.values, &graph->net.max,
+                       GsmApplication::get ()->config.network_in_bits);
+  else if (graph->type == LOAD_GRAPH_DISK)
+    rescale_to_window (graph, &graph->disk.values, &graph->disk.max, FALSE);
 }
 
 static guint64
@@ -1000,6 +1192,13 @@ get_disk (LoadGraph *graph)
 int
 load_graph_update_data (LoadGraph *graph)
 {
+  // Keeping all the history, make room rather than drop the oldest sample.
+  // Doubling keeps the copies this takes few and far between.
+  if (GsmApplication::get ()->config.graph_keep_all_history
+      && graph->filled >= graph->num_points - 2)
+    load_graph_change_num_points (graph, graph->num_points * 2,
+                                  gsm_graph_get_num_points (graph->disp));
+
   // Rotate data one element down.
   std::rotate (graph->data.begin (),
                graph->data.end () - 1,
@@ -1007,6 +1206,8 @@ load_graph_update_data (LoadGraph *graph)
 
   // Update rotation counter.
   graph->latest = (graph->latest + 1) % graph->num_points;
+  graph->samples++;
+  graph->filled = MIN (graph->filled + 1, graph->num_points);
 
   // Replace the 0th element
   switch (graph->type)
@@ -1030,6 +1231,10 @@ load_graph_update_data (LoadGraph *graph)
       default:
         g_assert_not_reached ();
     }
+
+  if (graph->history != NULL && graph->history->reference == graph)
+    history_sync (graph->history);
+
   return 0;
 }
 
@@ -1044,6 +1249,16 @@ load_graph_destroy (GtkWidget*,
   if (graph->time_axis != NULL)
     gtk_drawing_area_set_draw_func (GTK_DRAWING_AREA (graph->time_axis), NULL, NULL, NULL);
 
+  /* Likewise the history, which the scrollbar owns */
+  if (graph->history != NULL)
+    {
+      std::vector<LoadGraph*> &graphs = graph->history->graphs;
+
+      graphs.erase (std::remove (graphs.begin (), graphs.end (), graph), graphs.end ());
+      if (graph->history->reference == graph)
+        graph->history->reference = NULL;
+    }
+
   delete graph;
 }
 
@@ -1053,8 +1268,11 @@ LoadGraph::LoadGraph(guint type)
   n (0),
   type (type),
   speed (GsmApplication::get ()->config.graph_update_interval),
-  num_points (GsmApplication::get ()->config.graph_data_points + 2),
+  num_points (std::max (GsmApplication::get ()->config.graph_history_points,
+                         GsmApplication::get ()->config.graph_data_points) + 2),
   latest (0),
+  samples (0),
+  filled (0),
   graph_dely (0),
   num_bars (0),
   real_draw_height (0),
@@ -1064,6 +1282,7 @@ LoadGraph::LoadGraph(guint type)
   main_widget (NULL),
   disp (NULL),
   time_axis (NULL),
+  history (NULL),
   labels (),
   mem_color_picker (NULL),
   swap_color_picker (NULL),
@@ -1119,7 +1338,7 @@ LoadGraph::LoadGraph(guint type)
   disp = GSM_GRAPH (gsm_graph_new ());
   gsm_graph_set_speed (disp, speed);
   gsm_graph_set_data_function (disp, (GSourceFunc)load_graph_update_data, this);
-  gsm_graph_set_num_points (disp, num_points);
+  gsm_graph_set_num_points (disp, GsmApplication::get ()->config.graph_data_points + 2);
 
   switch (type)
     {
@@ -1205,13 +1424,48 @@ load_graph_change_speed (LoadGraph *graph,
     gtk_widget_queue_draw (graph->time_axis);
 }
 
+/* Put a ring buffer of values back in order for latest == 0, sized for the
+   new amount of data points, keeping the newest ones. */
+static void
+reorder_values (LoadGraph             *graph,
+                std::vector<unsigned> *values,
+                guint                  new_num_points)
+{
+  std::vector<unsigned> reordered (new_num_points);
+
+  for (guint back = 0; back < MIN (graph->num_points, new_num_points); back++)
+    reordered[new_num_points - 1 - back] = value_at (graph, values, back);
+
+  *values = std::move (reordered);
+}
+
 void
 load_graph_change_num_points (LoadGraph *graph,
-                              guint      new_num_points)
+                              guint      new_num_points,
+                              guint      new_visible_points)
 {
-  // Don't do anything if the value didn't change.
+  gsm_graph_set_num_points (graph->disp, new_visible_points);
+
+  // Keeping all the history, it never gets shorter.
+  if (GsmApplication::get ()->config.graph_keep_all_history)
+    new_num_points = MAX (new_num_points, graph->num_points);
+
+  // Nothing more to do if the history keeps its length.
   if (graph->num_points == new_num_points)
-    return;
+    {
+      if (graph->history != NULL && graph->history->reference == graph)
+        history_sync (graph->history);
+
+      if (graph->time_axis != NULL)
+        gtk_widget_queue_draw (graph->time_axis);
+      return;
+    }
+
+  // The net and disk values are indexed by latest, which is about to be reset.
+  if (graph->type == LOAD_GRAPH_NET)
+    reorder_values (graph, &graph->net.values, new_num_points);
+  else if (graph->type == LOAD_GRAPH_DISK)
+    reorder_values (graph, &graph->disk.values, new_num_points);
 
   // Sort the values in the data_block vector in the order they were accessed in by the pointers in data.
   std::rotate (graph->data_block.begin (),
@@ -1225,18 +1479,16 @@ load_graph_change_num_points (LoadGraph *graph,
   // Fill the new values with -1.
   graph->data.resize (new_num_points);
   graph->data_block.resize (graph->n * new_num_points, -1.0);
-  if (graph->type == LOAD_GRAPH_NET)
-    graph->net.values.resize (new_num_points);
-  else if (graph->type == LOAD_GRAPH_DISK)
-    graph->disk.values.resize (new_num_points);
 
   // Replace the pointers in data, to match the new data_block values.
   for (guint i = 0; i < new_num_points; ++i)
     graph->data[i] = &graph->data_block[0] + i * graph->n;
 
-  // Set the actual number of data points to be used by the graph.
   graph->num_points = new_num_points;
-  gsm_graph_set_num_points (graph->disp, new_num_points);
+  graph->filled = MIN (graph->filled, new_num_points);
+
+  if (graph->history != NULL && graph->history->reference == graph)
+    history_sync (graph->history);
 
   // Force the scale to be redrawn.
   graph->clear_background ();

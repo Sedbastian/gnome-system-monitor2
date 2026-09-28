@@ -102,6 +102,29 @@
               </object>
             </child>
             <child>
+              <object class="AdwActionRow" id="graph_history_points_row">
+                <property name="use-underline">True</property>
+                <property name="title" translatable="yes">Chart _History Points</property>
+                <property name="subtitle" translatable="yes">Older data points can be scrolled back to</property>
+                <child>
+                  <object class="GtkScale" id="graph_history_points_scale">
+                    <property name="hexpand">True</property>
+                    <property name="orientation">horizontal</property>
+                    <property name="draw-value">True</property>
+                    <property name="value-pos">right</property>
+                    <property name="digits">0</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwSwitchRow" id="graph_keep_all_history_switch">
+                <property name="use-underline">True</property>
+                <property name="title" translatable="yes">Keep _All History</property>
+                <property name="subtitle" translatable="yes">Every data point since System Monitor was opened</property>
+              </object>
+            </child>
+            <child>
               <object class="AdwSwitchRow" id="draw_smooth_switch">
                 <property name="use-underline">True</property>
                 <property name="title" translatable="yes">Draw Charts as S_mooth Graphs</property>

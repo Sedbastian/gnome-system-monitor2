@@ -87,6 +87,19 @@
       <summary>Time amount of data points in the resource graphs</summary>
     </key>
 
+    <key name="graph-history-points" type="i">
+      <range min="30" max="3600"/>
+      <default>600</default>
+      <summary>Amount of data points kept in the resource graphs' history</summary>
+      <description>The resource graphs show graph-data-points of them at a time; the rest can be scrolled back to.</description>
+    </key>
+
+    <key name="graph-keep-all-history" type="b">
+      <default>false</default>
+      <summary>Keep every data point in the resource graphs' history</summary>
+      <description>Keep every data point since the application was started, instead of graph-history-points of them.</description>
+    </key>
+
     <key name="show-whose-processes" type="s">
       <default>'user'</default>
       <choices>

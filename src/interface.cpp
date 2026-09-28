@@ -545,6 +545,11 @@ create_sys_view (GsmApplication *app,
   gtk_box_append (GTK_BOX (gtk_builder_get_object (builder, "res_box")),
                   load_graph_create_time_axis (cpu_graph));
 
+  /* And one scrollbar under it, to look back through the history of all of them */
+  gtk_box_append (GTK_BOX (gtk_builder_get_object (builder, "res_box")),
+                  load_graph_create_history_scrollbar (cpu_graph,
+                                                       { cpu_graph, mem_graph, net_graph, disk_graph }));
+
   legend_forward_scroll (builder, "cpu_legend_scroller");
   legend_forward_scroll (builder, "mem_legend_scroller");
   legend_forward_scroll (builder, "net_legend_scroller");

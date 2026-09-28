@@ -9,6 +9,8 @@
 #include <signal.h>
 #include <stdlib.h>
 
+#include <algorithm>
+
 #include "application.h"
 #include "procdialogs.h"
 #include "prefsdialog.h"
@@ -143,13 +145,24 @@ cb_data_points_changed (Gio::Settings& settings,
                         Glib::ustring  key,
                         GsmApplication*app)
 {
-  app->config.graph_data_points = settings.get_int (key);
-  unsigned points = app->config.graph_data_points + 2;
+  if (key == GSM_SETTING_GRAPH_DATA_POINTS)
+    app->config.graph_data_points = settings.get_int (key);
+  else if (key == GSM_SETTING_GRAPH_HISTORY_POINTS)
+    app->config.graph_history_points = settings.get_int (key);
+  else
+    app->config.graph_keep_all_history = settings.get_boolean (key);
 
-  load_graph_change_num_points (app->cpu_graph, points);
-  load_graph_change_num_points (app->mem_graph, points);
-  load_graph_change_num_points (app->net_graph, points);
-  load_graph_change_num_points (app->disk_graph, points);
+  /* The graphs show graph_data_points at a time, out of a history that is
+     never shorter than that. When keeping it all, the history only starts
+     at that length, and grows from there. */
+  unsigned visible = app->config.graph_data_points + 2;
+  unsigned stored = std::max (app->config.graph_history_points,
+                              app->config.graph_data_points) + 2;
+
+  load_graph_change_num_points (app->cpu_graph, stored, visible);
+  load_graph_change_num_points (app->mem_graph, stored, visible);
+  load_graph_change_num_points (app->net_graph, stored, visible);
+  load_graph_change_num_points (app->disk_graph, stored, visible);
 }
 
 static void
@@ -310,6 +323,14 @@ GsmApplication::load_settings ()
 
   config.graph_data_points = this->settings->get_int (GSM_SETTING_GRAPH_DATA_POINTS);
   this->settings->signal_changed (GSM_SETTING_GRAPH_DATA_POINTS).connect ([this](const Glib::ustring&key) {
+    cb_data_points_changed (*this->settings.operator-> (), key, this);
+  });
+  config.graph_history_points = this->settings->get_int (GSM_SETTING_GRAPH_HISTORY_POINTS);
+  this->settings->signal_changed (GSM_SETTING_GRAPH_HISTORY_POINTS).connect ([this](const Glib::ustring&key) {
+    cb_data_points_changed (*this->settings.operator-> (), key, this);
+  });
+  config.graph_keep_all_history = this->settings->get_boolean (GSM_SETTING_GRAPH_KEEP_ALL_HISTORY);
+  this->settings->signal_changed (GSM_SETTING_GRAPH_KEEP_ALL_HISTORY).connect ([this](const Glib::ustring&key) {
     cb_data_points_changed (*this->settings.operator-> (), key, this);
   });
 

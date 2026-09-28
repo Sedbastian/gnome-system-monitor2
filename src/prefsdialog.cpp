@@ -280,6 +280,25 @@ create_preferences_dialog (GsmApplication *app)
   g_signal_connect (G_OBJECT (range), "value-changed",
                     G_CALLBACK (range_value_changed), g_string_new ("graph-data-points"));
 
+  update = (gfloat) app->config.graph_history_points;
+  range = GTK_RANGE (gtk_builder_get_object (builder, "graph_history_points_scale"));
+
+  adjustment = gtk_range_get_adjustment (range);
+  gtk_adjustment_configure (adjustment, update, 30,
+                            3600, 10, 60, 0);
+  g_signal_connect (G_OBJECT (range), "value-changed",
+                    G_CALLBACK (range_value_changed), g_string_new ("graph-history-points"));
+
+  AdwSwitchRow *keep_all_history_switch = ADW_SWITCH_ROW (gtk_builder_get_object (builder, "graph_keep_all_history_switch"));
+
+  g_settings_bind (app->settings->gobj (), GSM_SETTING_GRAPH_KEEP_ALL_HISTORY,
+                   keep_all_history_switch, "active",
+                   G_SETTINGS_BIND_DEFAULT);
+  // Keeping it all, there is no number of points to choose.
+  g_object_bind_property (keep_all_history_switch, "active",
+                          gtk_builder_get_object (builder, "graph_history_points_row"), "sensitive",
+                          (GBindingFlags) (G_BINDING_SYNC_CREATE | G_BINDING_INVERT_BOOLEAN));
+
   AdwSwitchRow *bits_switch = ADW_SWITCH_ROW (gtk_builder_get_object (builder, "bits_switch"));
 
   g_settings_bind (app->settings->gobj (), GSM_SETTING_NETWORK_IN_BITS,
