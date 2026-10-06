@@ -187,6 +187,7 @@ create_background (LoadGraph *graph,
                    int        height)
 {
   GdkRGBA fg_color;
+  GdkRGBA label_color;
   GdkRGBA grid_color;
   GtkAllocation allocation;
   PangoContext *pango_context;
@@ -226,6 +227,10 @@ create_background (LoadGraph *graph,
    * this, here we offer the user a chance to set
    * his favorite background color. */
   GtkStyleContext *context = gtk_widget_get_style_context (GTK_WIDGET (graph->disp));
+
+  /* The axis labels sit in the margin beside the graph, on the window's own
+   * background, so they keep the theme's text color. */
+  gtk_style_context_get_color (context, &label_color);
 
   gtk_style_context_save (context);
 
@@ -286,7 +291,7 @@ create_background (LoadGraph *graph,
                      y - label_y_offset_modifier * extents.height / PANGO_SCALE);
 
       /* Set the color */
-      gdk_cairo_set_source_rgba (cr, &fg_color);
+      gdk_cairo_set_source_rgba (cr, &label_color);
 
       /* Paint the grid label */
       pango_cairo_show_layout (cr, layout);
@@ -333,6 +338,19 @@ create_background (LoadGraph *graph,
     }
 
   /* Paint */
+  cairo_stroke (cr);
+
+  /* The top and bottom lines (the graph's maximum and its zero) are drawn again
+   * over the grid, solid and a full pixel wide, so they stand out from it. Each
+   * is nudged half a pixel into the graph so it covers one row of pixels
+   * instead of being blurred across two. */
+  grid_color.alpha = 1.0;
+  gdk_cairo_set_source_rgba (cr, &grid_color);
+  cairo_set_line_width (cr, 1.0);
+  cairo_move_to (cr, indent, 0.5);
+  cairo_line_to (cr, width - rmargin + 4, 0.5);
+  cairo_move_to (cr, indent, graph->real_draw_height - 0.5);
+  cairo_line_to (cr, width - rmargin + 4, graph->real_draw_height - 0.5);
   cairo_stroke (cr);
 
   g_object_unref (layout);

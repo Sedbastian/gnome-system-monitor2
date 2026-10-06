@@ -44,15 +44,31 @@
 #include "settings-keys.h"
 #include "legacy/gsm_color_button.h"
 
-/* Besides the graph background, this trims the header bar, its buttons and the
+/* The whole window is black: the named colors above replace the theme's
+   backgrounds and text colors, and main () forces the dark scheme for the
+   widgets that draw themselves from it.
+   Besides the graph background, this trims the header bar, its buttons and the
    section title rows down to the height of the text and icons they hold: every
    pixel of chrome above the Resources page is a pixel its graphs do not get. */
 static const char*LOAD_GRAPH_CSS = "\
+@define-color window_bg_color #000000;\
+@define-color view_bg_color #000000;\
+@define-color headerbar_bg_color #000000;\
+@define-color headerbar_backdrop_color #000000;\
+@define-color sidebar_bg_color #000000;\
+@define-color card_bg_color #000000;\
+@define-color dialog_bg_color #000000;\
+@define-color popover_bg_color #000000;\
+@define-color window_fg_color #c8c8c8;\
+@define-color view_fg_color #c8c8c8;\
+@define-color headerbar_fg_color #c8c8c8;\
+@define-color sidebar_fg_color #c8c8c8;\
+@define-color card_fg_color #c8c8c8;\
+@define-color dialog_fg_color #c8c8c8;\
+@define-color popover_fg_color #c8c8c8;\
 .loadgraph {\
-    background: linear-gradient(to bottom,\
-                  @window_bg_color,\
-                  @view_bg_color);\
-    color: @window_fg_color;\
+    background: #000000;\
+    color: #c8c8c8;\
 }\
 headerbar.compact-header,\
 headerbar.compact-header > windowhandle,\

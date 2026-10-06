@@ -35,6 +35,8 @@ main (int   argc,
   setlocale (LC_ALL, "");
 
   adw_init ();
+  adw_style_manager_set_color_scheme (adw_style_manager_get_default (),
+                                      ADW_COLOR_SCHEME_FORCE_DARK);
 
   Glib::RefPtr<GsmApplication> application = GsmApplication::get ();
 
